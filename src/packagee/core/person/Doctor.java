@@ -6,7 +6,7 @@ package packagee.core.person;
 
 import java.util.ArrayList;
 import packagee.Appointment;
-import packagee.Hospitalization;
+import packagee.core.hospital.Hospitalization;
 import packagee.Specialty;
 
 /**

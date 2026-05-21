@@ -3,30 +3,31 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/NewJFrame1.java</file>
-            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/Doctor.java</file>
-            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/NewJFrame11.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/NewJFrame1.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/person/Doctor.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/NewJFrame11.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/AppointmentController.java</file>
-            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/NewJFrame.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/NewJFrame.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/HospitalizationController.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/Appointment.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/AppointmentStatus.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/AuthController.java</file>
-            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/DataStore.java</file>
-            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/DoctorController.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/DataBase.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/person/DoctorController.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/Hospitalization.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/HospitalizationStatus.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/Main.java</file>
-            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/PatientController.java</file>
-            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/Patient.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/person/PatientController.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/person/Patient.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/Administrator.java</file>
-            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/NewJFrame111.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/NewJFrame111.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/PanelRound.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/prescription.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/RoomType.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/Specialty.java</file>
-            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/User.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/person/User.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/Response.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/.git/config</file>
         </group>
     </open-files>
 </project-private>

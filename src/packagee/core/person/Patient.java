@@ -7,7 +7,7 @@ package packagee.core.person;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import packagee.Appointment;
-import packagee.Hospitalization;
+import packagee.core.hospital.Hospitalization;
 
 /**
  *

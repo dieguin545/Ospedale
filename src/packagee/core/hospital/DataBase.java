@@ -2,8 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package packagee;
+package packagee.core.hospital;
 
+import packagee.core.hospital.Hospitalization;
+import packagee.core.person.Administrator;
 import packagee.core.person.User;
 import packagee.core.person.Doctor;
 import packagee.core.person.Patient;
@@ -14,6 +16,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import packagee.Appointment;
+import packagee.AppointmentStatus;
+import packagee.Specialty;
 /**
  *
  * @author juand
@@ -45,10 +50,10 @@ public class DataBase {
         this.appointmentCounters = new java.util.HashMap<>();
         this.hospitalizationCounters = new java.util.HashMap<>();
 
-        loadUsersFromJson("C:\\Users\\juand\\OneDrive\\Desktop\\Ospedale\\json\\users.json");
+        cargarJSON("C:\\Users\\juand\\OneDrive\\Desktop\\Ospedale\\json\\users.json");
     }
 
-    private void loadUsersFromJson(String path) {
+    private void cargarJSON(String path) {
         try {
             String content = new String(Files.readAllBytes(Paths.get(path)));
             JSONObject root = new JSONObject(content);

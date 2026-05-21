@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package packagee;
+package packagee.core.control;
 
 /**
  *
@@ -16,36 +16,43 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import packagee.Appointment;
+import packagee.AppointmentStatus;
+import packagee.core.hospital.DataBase;
+import packagee.core.hospital.Hospitalization;
+import packagee.core.hospital.HospitalizationStatus;
+import packagee.response;
+import packagee.RoomType;
 
-public class HospitalizationController {
+public class Hospitalizationcontrol {
 
     private final DataBase store = DataBase.getInstance();
 
     
-    public Response requestHospitalization(long patientId, long doctorId,
+    public  response requestHospitalization(long patientId, long doctorId,
             String dateStr, String reason, String roomTypeStr, String observations) {
 
         User patientFound = store.findUserById(patientId);
         if (patientFound == null || !(patientFound instanceof Patient)) {
-            return new Response(Response.NOT_FOUND, "Paciente no encontrado.");
+            return new response(response.NOT_FOUND, "Paciente no encontrado.");
         }
         User doctorFound = store.findUserById(doctorId);
         if (doctorFound == null || !(doctorFound instanceof Doctor)) {
-            return new Response(Response.NOT_FOUND, "Doctor no encontrado.");
+            return new response(response.NOT_FOUND, "Doctor no encontrado.");
         }
 
         LocalDate date;
         try {
             date = LocalDate.parse(dateStr);
         } catch (DateTimeParseException e) {
-            return new Response(Response.BAD_REQUEST, "Fecha inválida. Formato: AAAA-MM-DD");
+            return new response(response.BAD_REQUEST, "Fecha inválida. Formato: AAAA-MM-DD");
         }
 
         RoomType roomType;
         try {
             roomType = RoomType.valueOf(roomTypeStr.toUpperCase());
         } catch (IllegalArgumentException e) {
-            return new Response(Response.BAD_REQUEST, "Tipo de habitación inválido.");
+            return new response(response.BAD_REQUEST, "Tipo de habitación inválido.");
         }
 
         Patient patient = (Patient) patientFound;
@@ -59,35 +66,35 @@ public class HospitalizationController {
         patient.setHospitalization(hospitalization);
         doctor.addHospitalization(hospitalization);
 
-        return new Response(Response.SUCCESS, "Hospitalización solicitada. ID: " + hospId);
+        return new response(response.SUCCESS, "Hospitalización solicitada. ID: " + hospId);
     }
 
-    public Response hospitalizeFromAppointment(String appointmentId, long doctorId,
+    public response hospitalizeFromAppointment(String appointmentId, long doctorId,
             String dateStr, String reason, String roomTypeStr, String observations) {
 
         Appointment appointment = store.findAppointmentById(appointmentId);
         if (appointment == null) {
-            return new Response(Response.NOT_FOUND, "Cita no encontrada.");
+            return new response(response.NOT_FOUND, "Cita no encontrada.");
         }
         if (appointment.getDoctor().getId() != doctorId) {
-            return new Response(Response.UNAUTHORIZED, "Este doctor no es el asignado a esta cita.");
+            return new response(response.UNAUTHORIZED, "Este doctor no es el asignado a esta cita.");
         }
         if (appointment.getStatus() != AppointmentStatus.PENDING) {
-            return new Response(Response.BAD_REQUEST, "Solo se puede hospitalizar desde citas PENDING.");
+            return new response(response.BAD_REQUEST, "Solo se puede hospitalizar desde citas PENDING.");
         }
 
         LocalDate date;
         try {
             date = LocalDate.parse(dateStr);
         } catch (DateTimeParseException e) {
-            return new Response(Response.BAD_REQUEST, "Fecha inválida. Formato: AAAA-MM-DD");
+            return new response(response.BAD_REQUEST, "Fecha inválida. Formato: AAAA-MM-DD");
         }
 
         RoomType roomType;
         try {
             roomType = RoomType.valueOf(roomTypeStr.toUpperCase());
         } catch (IllegalArgumentException e) {
-            return new Response(Response.BAD_REQUEST, "Tipo de habitación inválido.");
+            return new response(response.BAD_REQUEST, "Tipo de habitación inválido.");
         }
 
         Patient patient = appointment.getPatient();
@@ -103,45 +110,45 @@ public class HospitalizationController {
         patient.setHospitalization(hospitalization);
         doctor.addHospitalization(hospitalization);
 
-        return new Response(Response.SUCCESS, "Paciente hospitalizado. ID: " + hospId);
+        return new response(response.SUCCESS, "Paciente hospitalizado. ID: " + hospId);
     }
 
-    public Response approveHospitalization(String hospId, long doctorId) {
+    public response approveHospitalization(String hospId, long doctorId) {
         Hospitalization hosp = store.findHospitalizationById(hospId);
         if (hosp == null) {
-            return new Response(Response.NOT_FOUND, "Hospitalización no encontrada.");
+            return new response(response.NOT_FOUND, "Hospitalización no encontrada.");
         }
         if (hosp.getDoctor().getId() != doctorId) {
-            return new Response(Response.UNAUTHORIZED, "Este doctor no está asignado a esta hospitalización.");
+            return new response(response.UNAUTHORIZED, "Este doctor no está asignado a esta hospitalización.");
         }
         if (hosp.getStatus() != HospitalizationStatus.REQUESTED) {
-            return new Response(Response.BAD_REQUEST, "Solo se pueden aprobar hospitalizaciones en estado REQUESTED.");
+            return new response(response.BAD_REQUEST, "Solo se pueden aprobar hospitalizaciones en estado REQUESTED.");
         }
         hosp.setStatus(HospitalizationStatus.ONGOING);
-        return new Response(Response.SUCCESS, "Hospitalización aprobada.");
+        return new response(response.SUCCESS, "Hospitalización aprobada.");
     }
 
-    public Response cancelHospitalization(String hospId, long doctorId) {
+    public response cancelHospitalization(String hospId, long doctorId) {
         Hospitalization hosp = store.findHospitalizationById(hospId);
         if (hosp == null) {
-            return new Response(Response.NOT_FOUND, "Hospitalización no encontrada.");
+            return new response(response.NOT_FOUND, "Hospitalización no encontrada.");
         }
         if (hosp.getDoctor().getId() != doctorId) {
-            return new Response(Response.UNAUTHORIZED, "Este doctor no está asignado a esta hospitalización.");
+            return new response(response.UNAUTHORIZED, "Este doctor no está asignado a esta hospitalización.");
         }
         if (hosp.getStatus() == HospitalizationStatus.ONGOING) {
-            return new Response(Response.BAD_REQUEST, "No se puede cancelar una hospitalización en curso.");
+            return new response(response.BAD_REQUEST, "No se puede cancelar una hospitalización en curso.");
         }
         hosp.setStatus(HospitalizationStatus.CANCELED);
-        return new Response(Response.SUCCESS, "Hospitalización cancelada.");
+        return new response(response.SUCCESS, "Hospitalización cancelada.");
     }
 
-    public Response getAllHospitalizations() {
+    public response getAllHospitalizations() {
         ArrayList<Map<String, Object>> list = new ArrayList<>();
         for (Hospitalization h : store.getHospitalizations()) {
             list.add(serializeHospitalization(h));
         }
-        return new Response(Response.SUCCESS, "OK", list);
+        return new response(response.SUCCESS, "OK", list);
     }
 
     private Map<String, Object> serializeHospitalization(Hospitalization h) {

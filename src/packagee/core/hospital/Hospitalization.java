@@ -2,11 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package packagee;
+package packagee.core.hospital;
 
 import packagee.core.person.Doctor;
 import packagee.core.person.Patient;
 import java.time.LocalDate;
+import packagee.RoomType;
 
 /**
  *
@@ -18,7 +19,6 @@ public class Hospitalization {
     private Patient patient;
     private Doctor doctor;
     private LocalDate date;
-
     private String reason;
     private RoomType roomType;
     private String observations;

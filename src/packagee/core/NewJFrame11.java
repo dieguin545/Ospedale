@@ -9,7 +9,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import packagee.Appointment;
 import packagee.core.person.Doctor;
-import packagee.Hospitalization;
+import packagee.core.hospital.Hospitalization;
 import packagee.core.person.Patient;
 import packagee.Specialty;
 import packagee.core.person.User;
