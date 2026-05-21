@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package packagee;
+package packagee.core;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import java.awt.Color;
@@ -10,6 +10,12 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import javax.swing.UIManager;
+import packagee.Administrator;
+import packagee.Appointment;
+import packagee.core.person.Doctor;
+import packagee.Hospitalization;
+import packagee.core.person.Patient;
+import packagee.core.person.User;
 
 /**
  *

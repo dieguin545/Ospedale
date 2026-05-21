@@ -2,13 +2,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package packagee;
+package packagee.core;
 
+import packagee.core.NewJFrame;
 import java.awt.Color;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
+import packagee.Administrator;
+import packagee.Appointment;
+import packagee.AppointmentStatus;
+import packagee.core.person.Doctor;
+import packagee.Hospitalization;
+import packagee.HospitalizationStatus;
+import packagee.core.person.Patient;
+import packagee.Prescription;
+import packagee.RoomType;
+import packagee.Specialty;
+import packagee.core.person.User;
 
 /**
  *

@@ -4,6 +4,8 @@
  */
 package packagee;
 
+import packagee.core.person.User;
+
 /**
  *
  * @author edangulo

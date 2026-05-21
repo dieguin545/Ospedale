@@ -2,14 +2,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package packagee;
+package packagee.core;
 
+import packagee.core.NewJFrame;
+import packagee.core.person.User;
 import java.awt.Color;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
+import packagee.Administrator;
+import packagee.Appointment;
+import packagee.AppointmentStatus;
+import packagee.core.person.Doctor;
+import packagee.Hospitalization;
+import packagee.core.person.Patient;
+import packagee.RoomType;
+import packagee.Specialty;
+import packagee.core.person.User;
 
 /**
  *
@@ -884,9 +895,9 @@ public class NewJFrame1 extends javax.swing.JFrame {
         String hospitalizationReason = jTextArea3.getText();
         long idDoctor = Long.parseLong(jComboBox2.getItemAt(jComboBox2.getSelectedIndex()));
         Doctor doc = null;
-        for(User use: this.users){
-            if (use.id  == idDoctor ){
-                doc = (Doctor) use;
+        for(User user: this.users){
+            if (user.getId()  == idDoctor ){
+                doc = (Doctor) user;
             }
         }
         LocalDate stimateDate = LocalDate.of(Integer.parseInt(jTextField16.getText().substring(0, 4)),Integer.parseInt(jTextField16.getText().substring(5, 7)), Integer.parseInt(jTextField16.getText().substring(8)));

@@ -4,6 +4,8 @@
  */
 package packagee;
 
+import packagee.core.person.Doctor;
+import packagee.core.person.Patient;
 import java.time.LocalDate;
 
 /**
@@ -17,18 +19,10 @@ public class Hospitalization {
     private Doctor doctor;
     private LocalDate date;
 
-    public String getId() {
-        return id;
-    }
     private String reason;
     private RoomType roomType;
     private String observations;
     private HospitalizationStatus status;
-
-    public void setStatus(HospitalizationStatus status) {
-        this.status = status;
-    }
-
     public Hospitalization(String id, Patient patient, Doctor doctor, LocalDate date, String reason, RoomType roomType, String observations) {
         this.id = id;
         this.patient = patient;
@@ -53,5 +47,43 @@ public class Hospitalization {
         this.observations = observations;
         this.status = hopsS;
     }
+
+    public String getId() {
+        return id;
+    }
+    
+    public Doctor getDoctor() {
+        return doctor;
+    }
+
+    public HospitalizationStatus getStatus() {
+        return status;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+
+    public RoomType getRoomType() {
+        return roomType;
+    }
+
+    public String getObservations() {
+        return observations;
+    }
+    
+    public void setStatus(HospitalizationStatus status) {
+        this.status = status;
+    }
+
+
     
 }

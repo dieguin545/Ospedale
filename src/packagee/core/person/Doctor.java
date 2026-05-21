@@ -2,9 +2,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package packagee;
+package packagee.core.person;
 
 import java.util.ArrayList;
+import packagee.Appointment;
+import packagee.Hospitalization;
+import packagee.Specialty;
 
 /**
  *
@@ -49,4 +52,17 @@ public class Doctor extends User {
     public void setAssignedOffice(String assignedOffice) {
         this.assignedOffice = assignedOffice;
     }
+
+
+    public String getLicenceNumber() {
+        return licenceNumber;
+    }
+
+    public String getAssignedOffice() {
+        return assignedOffice;
+    }
+
+    public void addAppointment(Appointment appointment) {
+    }
+    
 }

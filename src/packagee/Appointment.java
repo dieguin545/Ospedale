@@ -4,6 +4,8 @@
  */
 package packagee;
 
+import packagee.core.person.Doctor;
+import packagee.core.person.Patient;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -31,6 +33,18 @@ public class Appointment {
     private String recommendedTreatment;
     private String followUp;
 
+    public Appointment(String id, Patient patient, Doctor doctor, Specialty specialty, LocalDateTime datetime, String reason, boolean type) {
+        this.id = id;
+        this.patient = patient;
+        this.doctor = doctor;
+        this.specialty = specialty;
+        this.datetime = datetime;
+        this.reason = reason;
+        this.type = type;
+        this.status = AppointmentStatus.REQUESTED;
+        this.prescriptions = new ArrayList<>();
+    }
+    
     public void setDiagnosis(String diagnosis) {
         this.diagnosis = diagnosis;
     }
@@ -47,21 +61,19 @@ public class Appointment {
         this.followUp = followUp;
     }
 
-    public Appointment(String id, Patient patient, Doctor doctor, Specialty specialty, LocalDateTime datetime, String reason, boolean type) {
-        this.id = id;
-        this.patient = patient;
-        this.doctor = doctor;
-        this.specialty = specialty;
-        this.datetime = datetime;
-        this.reason = reason;
-        this.type = type;
-        this.status = AppointmentStatus.REQUESTED;
-        this.prescriptions = new ArrayList<>();
-    }
 
     public void setStatus(AppointmentStatus status) {
         this.status = status;
     }
+
+    public void setDatetime(LocalDateTime datetime) {
+        this.datetime = datetime;
+    }
+
+    public String getReason() {
+        return reason;
+    }
+    
 
     public String getId() {
         return id;
