@@ -47,12 +47,12 @@ public class PatientControl {
             String email, String birthdateStr, String genderStr,
             String phoneStr, String address) {
 
-        User found = store.findUserById(patientId);
+        User found = store.findID(patientId);
         if (found == null || !(found instanceof Patient)) {
             return new response(response.NOT_FOUND, "Paciente no encontrado.");
         }
 
-        User byUsername = store.findUserByUsername(username);
+        User byUsername = store.findUser(username);
         if (byUsername != null && byUsername.getId() != patientId) {
             return new response(response.CONFLICT, "El nombre de usuario ya está en uso.");
         }
@@ -79,7 +79,7 @@ public class PatientControl {
     }
 
     public response getPatient(long patientId) {
-        User found = store.findUserById(patientId);
+        User found = store.findID(patientId);
         if (found == null || !(found instanceof Patient)) {
             return new response(response.NOT_FOUND, "Paciente no encontrado.");
         }
@@ -110,7 +110,7 @@ public class PatientControl {
             return new response(response.CONFLICT, "El ID ya está en uso.");
         }
 
-        if (store.usernameExists(username)) {
+        if (store.userExists(username)) {
             return new response(response.CONFLICT, "El nombre de usuario ya está en uso.");
         }
 

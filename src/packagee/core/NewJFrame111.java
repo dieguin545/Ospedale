@@ -40,10 +40,11 @@ public class NewJFrame111 extends javax.swing.JFrame {
         this.setBackground(new Color(0, 0, 0, 0));
         this.setLocationRelativeTo(null);
         loadDoctorInfo();
-        loadRequestedAppointmentsCombo();
-        loadPendingAppointmentsCombo();
+        appointmentRequest();
+        AppointemntsLoadP();
         loadPatientCombo();
         loadHospitalizationCombos();
+        loadAppointmentsTable(false);
     }
 
     private void loadDoctorInfo() {
@@ -64,7 +65,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
         }
     }
 
-    private void loadRequestedAppointmentsCombo() {
+    private void appointmentRequest() {
         response response = appointmentControl.getDoctorAppointments(doctorId, false);
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         model.addElement("Select one");
@@ -79,7 +80,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
         jComboBox2.setModel(model);
     }
 
-    private void loadPendingAppointmentsCombo() {
+    private void AppointemntsLoadP() {
         response response = appointmentControl.getDoctorAppointments(doctorId, true);
         DefaultComboBoxModel<String> modelReschedule = new DefaultComboBoxModel<>();
         DefaultComboBoxModel<String> modelComplete = new DefaultComboBoxModel<>();
@@ -582,8 +583,8 @@ public class NewJFrame111 extends javax.swing.JFrame {
         response response = appointmentControl.acceptAppointment(appointmentId, doctorId);
         if (response.isSuccess()) {
             JOptionPane.showMessageDialog(this, response.getMessage(), "Éxito", JOptionPane.INFORMATION_MESSAGE);
-            loadRequestedAppointmentsCombo();
-            loadPendingAppointmentsCombo();
+            appointmentRequest();
+            AppointemntsLoadP();
         } else {
             JOptionPane.showMessageDialog(this, response.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -614,7 +615,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
         if (response.isSuccess()) {
             JOptionPane.showMessageDialog(this, response.getMessage(), "Éxito", JOptionPane.INFORMATION_MESSAGE);
             jTextArea5.setText(""); jTextArea6.setText(""); jTextArea7.setText(""); jTextArea8.setText("");
-            loadPendingAppointmentsCombo();
+            AppointemntsLoadP();
         } else {
             JOptionPane.showMessageDialog(this, response.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -644,7 +645,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
             if (response.isSuccess()) {
                 JOptionPane.showMessageDialog(this, response.getMessage(), "Éxito", JOptionPane.INFORMATION_MESSAGE);
                 jTextField21.setText(""); jTextField22.setText(""); jTextArea9.setText(""); jTextArea1.setText("");
-                loadPendingAppointmentsCombo();
+                AppointemntsLoadP();
                 loadHospitalizationCombos();
             } else {
                 JOptionPane.showMessageDialog(this, response.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

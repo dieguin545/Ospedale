@@ -55,7 +55,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
     }
 
     private void loadDoctorCombo() {
-        response response = doctorControl.getAllDoctors();
+        response response = doctorControl.getDoctors();
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         model.addElement("Select one");
         if (response.isSuccess()) {
@@ -435,7 +435,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
 
     private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton4ActionPerformed
         jRadioButton3.setSelected(false);
-        response response = doctorControl.getAllDoctors();
+        response response = doctorControl.getDoctors();
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         model.addElement("Select one");
         if (response.isSuccess()) {

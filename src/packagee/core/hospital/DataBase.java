@@ -118,7 +118,7 @@ public class DataBase {
         this.users.add(user);
     }
 
-    public User findUserByUsername(String username) {
+    public User findUser(String username) {
         for (User u : users) {
             if (u.getUsername().equals(username)) {
                 return u;
@@ -127,7 +127,7 @@ public class DataBase {
         return null;
     }
 
-    public User findUserById(long id) {
+    public User findID(long id) {
         for (User u : users) {
             if (u.getId() == id) {
                 return u;
@@ -136,12 +136,12 @@ public class DataBase {
         return null;
     }
 
-    public boolean usernameExists(String username) {
-        return findUserByUsername(username) != null;
+    public boolean userExists(String username) {
+        return findUser(username) != null;
     }
 
     public boolean idExists(long id) {
-        return findUserById(id) != null;
+        return findID(id) != null;
     }
 
     public ArrayList<Appointment> getAppointments() {
@@ -152,7 +152,7 @@ public class DataBase {
         this.appointments.add(appointment);
     }
 
-    public Appointment findAppointmentById(String id) {
+    public Appointment findIDapp(String id) {
         for (Appointment a : appointments) {
             if (a.getId().equals(id)) {
                 return a;
@@ -161,7 +161,7 @@ public class DataBase {
         return null;
     }
 
-    public String generateAppointmentId(long patientId) {
+    public String generateAppID(long patientId) {
         String key = String.valueOf(patientId);
         int counter = appointmentCounters.getOrDefault(key, 0);
         String id = String.format("A-%s-%04d", key, counter);
@@ -177,7 +177,7 @@ public class DataBase {
         this.hospitalizations.add(hospitalization);
     }
 
-    public Hospitalization findHospitalizationById(String id) {
+    public Hospitalization findHospitalizationID(String id) {
         for (Hospitalization h : hospitalizations) {
             if (h.getId().equals(id)) {
                 return h;
@@ -187,7 +187,7 @@ public class DataBase {
     }
 
     
-    public String generateHospitalizationId(long patientId) {
+    public String genHospitalizationID(long patientId) {
         String key = String.valueOf(patientId);
         int counter = hospitalizationCounters.getOrDefault(key, 0);
         String id = String.format("H-%s-%04d", key, counter);
@@ -205,17 +205,17 @@ public class DataBase {
         return doctors;
     }
 
-    public ArrayList<Doctor> getAvailableDoctorsBySpecialty(Specialty specialty, java.time.LocalDateTime datetime) {
+    public ArrayList<Doctor> getdoctorsSpeciality(Specialty specialty, java.time.LocalDateTime datetime) {
         ArrayList<Doctor> available = new ArrayList<>();
         for (Doctor d : getDoctors()) {
-            if (d.getSpecialty() == specialty && isDoctorAvailable(d, datetime)) {
+            if (d.getSpecialty() == specialty && doctorAvailable(d, datetime)) {
                 available.add(d);
             }
         }
         return available;
     }
 
-    public boolean isDoctorAvailable(Doctor doctor, java.time.LocalDateTime datetime) {
+    public boolean doctorAvailable(Doctor doctor, java.time.LocalDateTime datetime) {
         java.time.LocalDateTime end = datetime.plusMinutes(15);
         for (Appointment a : appointments) {
             if (a.getDoctor().getId() == doctor.getId()

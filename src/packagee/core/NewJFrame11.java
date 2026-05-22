@@ -35,7 +35,7 @@ public class NewJFrame11 extends javax.swing.JFrame {
     }
 
     private void loadDoctorCombo() {
-        response response = doctorControl.getAllDoctors();
+        response response = doctorControl.getDoctors();
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         model.addElement("Select one");
         if (response.isSuccess()) {

@@ -26,7 +26,7 @@ public class Authcontrol {
             return new response(response.BAD_REQUEST, "Usuario y contraseña son obligatorios.");
         }
 
-        User user = store.findUserByUsername(username);
+        User user = store.findUser(username);
 
         if (user == null || !user.getPassword().equals(password)) {
             return new response(response.UNAUTHORIZED, "Usuario o contraseña incorrectos.");

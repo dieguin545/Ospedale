@@ -44,12 +44,12 @@ public class DoctorControl {
             String username, String password, String confirmPassword,
             String specialtyStr, String licenceNumber, String assignedOffice) {
 
-        User found = store.findUserById(doctorId);
+        User found = store.findID(doctorId);
         if (found == null || !(found instanceof Doctor)) {
             return new response(response.NOT_FOUND, "Doctor no encontrado.");
         }
 
-        User byUsername = store.findUserByUsername(username);
+        User byUsername = store.findUser(username);
         if (byUsername != null && byUsername.getId() != doctorId) {
             return new response(response.CONFLICT, "El nombre de usuario ya está en uso.");
         }
@@ -84,7 +84,7 @@ public class DoctorControl {
         return new response(response.SUCCESS, "Información del doctor actualizada.");
     }
 
-    public response getAllDoctors() {
+    public response getDoctors() {
         ArrayList<Map<String, Object>> list = new ArrayList<>();
         for (Doctor d : store.getDoctors()) {
             list.add(serializeDoctor(d));
@@ -93,7 +93,7 @@ public class DoctorControl {
     }
 
     public response getDoctorInfo(long doctorId) {
-        User found = store.findUserById(doctorId);
+        User found = store.findID(doctorId);
         if (found == null || !(found instanceof Doctor)) {
             return new response(response.NOT_FOUND, "Doctor no encontrado.");
         }
@@ -110,7 +110,7 @@ public class DoctorControl {
         if (store.idExists(Long.parseLong(idStr))) {
             return new response(response.CONFLICT, "El ID ya está en uso.");
         }
-        if (store.usernameExists(username)) {
+        if (store.userExists(username)) {
             return new response(response.CONFLICT, "El nombre de usuario ya está en uso.");
         }
         if (!password.equals(confirmPassword)) {

@@ -36,7 +36,7 @@ public class AppointmentControl {
             String doctorOrSpecialtyStr, String dateStr, String timeStr,
             String reason, boolean isInPerson) {
 
-        User found = store.findUserById(patientId);
+        User found = store.findID(patientId);
         if (found == null || !(found instanceof Patient)) {
             return new response(response.NOT_FOUND, "Paciente no encontrado.");
         }
@@ -69,14 +69,14 @@ public class AppointmentControl {
             } catch (NumberFormatException e) {
                 return new response(response.BAD_REQUEST, "ID de doctor inválido.");
             }
-            User docFound = store.findUserById(docId);
+            User docFound = store.findID(docId);
             if (docFound == null || !(docFound instanceof Doctor)) {
                 return new response(response.NOT_FOUND, "Doctor no encontrado.");
             }
             doctor = (Doctor) docFound;
             specialty = doctor.getSpecialty();
 
-            if (!store.isDoctorAvailable(doctor, datetime)) {
+            if (!store.doctorAvailable(doctor, datetime)) {
                 return new response(response.CONFLICT, "El doctor no tiene disponibilidad en ese horario.");
             }
         } else {
@@ -86,14 +86,14 @@ public class AppointmentControl {
             } catch (IllegalArgumentException e) {
                 return new response(response.BAD_REQUEST, "Especialidad inválida.");
             }
-            ArrayList<Doctor> available = store.getAvailableDoctorsBySpecialty(specialty, datetime);
+            ArrayList<Doctor> available = store.getdoctorsSpeciality(specialty, datetime);
             if (available.isEmpty()) {
                 return new response(response.CONFLICT, "No hay doctores disponibles para esa especialidad y horario.");
             }
             doctor = available.get(0); // asigna el primero disponible
         }
 
-        String appointmentId = store.generateAppointmentId(patientId);
+        String appointmentId = store.generateAppID(patientId);
         Appointment appointment = new Appointment(appointmentId, patient, doctor,
                 specialty, datetime, reason, isInPerson);
 
@@ -106,7 +106,7 @@ public class AppointmentControl {
 
 
     public response acceptAppointment(String appointmentId, long doctorId) {
-        Appointment appointment = store.findAppointmentById(appointmentId);
+        Appointment appointment = store.findIDapp(appointmentId);
         if (appointment == null) {
             return new 
                     response(response.NOT_FOUND, "Cita no encontrada.");
@@ -124,7 +124,7 @@ public class AppointmentControl {
 
     public response completeAppointment(String appointmentId, long doctorId,
             String diagnosis, String observations, String recommendedTreatment, String followUp) {
-        Appointment appointment = store.findAppointmentById(appointmentId);
+        Appointment appointment = store.findIDapp(appointmentId);
         if (appointment == null) {
             return new response(response.NOT_FOUND, "Cita no encontrada.");
         }
@@ -144,7 +144,7 @@ public class AppointmentControl {
 
 
     public response cancelAppointment(String appointmentId, long patientId) {
-        Appointment appointment = store.findAppointmentById(appointmentId);
+        Appointment appointment = store.findIDapp(appointmentId);
         if (appointment == null) {
             return new response(response.NOT_FOUND, "Cita no encontrada.");
         }
@@ -161,7 +161,7 @@ public class AppointmentControl {
 
     public response rescheduleAppointment(String appointmentId, long doctorId,
             String newTimeStr, String rescheduleReason) {
-        Appointment appointment = store.findAppointmentById(appointmentId);
+        Appointment appointment = store.findIDapp(appointmentId);
         if (appointment == null) {
             return new response(response.NOT_FOUND, "Cita no encontrada.");
         }
@@ -193,7 +193,7 @@ public class AppointmentControl {
             String medicationName, double dose, String administrationRoute,
             int treatmentDuration, String additionalInstructions, int frecuency) {
 
-        Appointment appointment = store.findAppointmentById(appointmentId);
+        Appointment appointment = store.findIDapp(appointmentId);
         if (appointment == null) {
             return new response(response.NOT_FOUND, "Cita no encontrada.");
         }
@@ -212,7 +212,7 @@ public class AppointmentControl {
     }
 
     public response getPatientAppointments(long patientId) {
-        User found = store.findUserById(patientId);
+        User found = store.findID(patientId);
         if (found == null || !(found instanceof Patient)) {
             return new response(response.NOT_FOUND, "Paciente no encontrado.");
         }
@@ -229,7 +229,7 @@ public class AppointmentControl {
 
 
     public response getDoctorAppointments(long doctorId, boolean pendingOnly) {
-        User found = store.findUserById(doctorId);
+        User found = store.findID(doctorId);
         if (found == null || !(found instanceof Doctor)) {
             return new response(response.NOT_FOUND, "Doctor no encontrado.");
         }

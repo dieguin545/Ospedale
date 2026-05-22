@@ -32,11 +32,11 @@ public class Hospitalizationcontrol {
     public  response requestHospitalization(long patientId, long doctorId,
             String dateStr, String reason, String roomTypeStr, String observations) {
 
-        User patientFound = store.findUserById(patientId);
+        User patientFound = store.findID(patientId);
         if (patientFound == null || !(patientFound instanceof Patient)) {
             return new response(response.NOT_FOUND, "Paciente no encontrado.");
         }
-        User doctorFound = store.findUserById(doctorId);
+        User doctorFound = store.findID(doctorId);
         if (doctorFound == null || !(doctorFound instanceof Doctor)) {
             return new response(response.NOT_FOUND, "Doctor no encontrado.");
         }
@@ -58,7 +58,7 @@ public class Hospitalizationcontrol {
         Patient patient = (Patient) patientFound;
         Doctor doctor = (Doctor) doctorFound;
 
-        String hospId = store.generateHospitalizationId(patientId);
+        String hospId = store.genHospitalizationID(patientId);
         Hospitalization hospitalization = new Hospitalization(hospId, patient, doctor,
                 date, reason, roomType, observations);
 
@@ -72,7 +72,7 @@ public class Hospitalizationcontrol {
     public response hospitalizeFromAppointment(String appointmentId, long doctorId,
             String dateStr, String reason, String roomTypeStr, String observations) {
 
-        Appointment appointment = store.findAppointmentById(appointmentId);
+        Appointment appointment = store.findIDapp(appointmentId);
         if (appointment == null) {
             return new response(response.NOT_FOUND, "Cita no encontrada.");
         }
@@ -102,7 +102,7 @@ public class Hospitalizationcontrol {
 
         appointment.setStatus(AppointmentStatus.COMPLETED);
 
-        String hospId = store.generateHospitalizationId(patient.getId());
+        String hospId = store.genHospitalizationID(patient.getId());
         Hospitalization hospitalization = new Hospitalization(hospId, patient, doctor,
                 date, reason, roomType, observations, HospitalizationStatus.ONGOING);
 
@@ -114,7 +114,7 @@ public class Hospitalizationcontrol {
     }
 
     public response approveHospitalization(String hospId, long doctorId) {
-        Hospitalization hosp = store.findHospitalizationById(hospId);
+        Hospitalization hosp = store.findHospitalizationID(hospId);
         if (hosp == null) {
             return new response(response.NOT_FOUND, "Hospitalización no encontrada.");
         }
@@ -129,7 +129,7 @@ public class Hospitalizationcontrol {
     }
 
     public response cancelHospitalization(String hospId, long doctorId) {
-        Hospitalization hosp = store.findHospitalizationById(hospId);
+        Hospitalization hosp = store.findHospitalizationID(hospId);
         if (hosp == null) {
             return new response(response.NOT_FOUND, "Hospitalización no encontrada.");
         }

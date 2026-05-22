@@ -347,6 +347,10 @@ public class NewJFrame extends javax.swing.JFrame {
         String firstname   = jTextField3.getText();
         String lastname    = jTextField4.getText();
         String id          = jTextField5.getText();
+        if (jComboBox1.getSelectedIndex() == 0) {
+        JOptionPane.showMessageDialog(this, "Selecciona un género.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+}
         String gender      = jComboBox1.getSelectedIndex() == 2 ? "Male" : "Female";
         String birthdate   = jTextField12.getText();
         String address     = jTextField11.getText();
