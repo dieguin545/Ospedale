@@ -24,6 +24,7 @@ public class Doctor extends User {
     public Doctor(long id, String username, String firstname, String lastname, String password, Specialty specialty, String licenceNumber, String assignedOffice) {
         super(id, username, firstname, lastname, password);
         hospitalizations = new ArrayList<>();
+        appointments = new ArrayList<>();
         this.specialty = specialty;
         this.licenceNumber = licenceNumber;
         this.assignedOffice = assignedOffice;
@@ -63,6 +64,7 @@ public class Doctor extends User {
     }
 
     public void addAppointment(Appointment appointment) {
-    }
+    appointments.add(appointment);
+}
     
 }
