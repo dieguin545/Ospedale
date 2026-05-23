@@ -17,10 +17,11 @@ import packagee.core.person.Administrator;
 import packagee.core.hospital.DataBase;
 import packagee.response;
 
-public class Authcontrol {
+public class Authcontrol implements AuthControlint {
 
     private final DataBase store = DataBase.getInstance();
 
+    @Override
     public response login(String username, String password) {
         if (username == null || username.isBlank() || password == null || password.isBlank()) {
             return new response(response.BAD_REQUEST, "Usuario y contraseña son obligatorios.");

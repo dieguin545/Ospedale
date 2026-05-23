@@ -13,19 +13,21 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import packagee.core.control.patientControlint;
 import packagee.core.hospital.DataBase;
 import packagee.response;
 
-public class PatientControl {
+public class PatientControl implements patientControlint {
 
     private final DataBase store = DataBase.getInstance();
 
+    @Override
     public response registrarPaciente(String firstname, String lastname, String idStr,
             String username, String password, String confirmPassword,
             String email, String birthdateStr, String genderStr,
             String phoneStr, String address) {
 
-        response validation = PatientValidation(idStr, username, password, confirmPassword,
+        response validation = Patientval(idStr, username, password, confirmPassword,
                 email, birthdateStr, phoneStr);
         if (!validation.isSuccess()) return validation;
 
@@ -41,7 +43,7 @@ public class PatientControl {
         return new response(response.SUCCESS, "Paciente registrado exitosamente.");
     }
 
-    
+    @Override
     public response PatientUpdate(long patientId, String firstname, String lastname,
             String username, String password, String confirmPassword,
             String email, String birthdateStr, String genderStr,
@@ -57,7 +59,7 @@ public class PatientControl {
             return new response(response.CONFLICT, "El nombre de usuario ya está en uso.");
         }
 
-        response validation = PatientValidation(String.valueOf(patientId), username,
+        response validation = Patientval(String.valueOf(patientId), username,
                 password, confirmPassword, email, birthdateStr, phoneStr);
         if (validation.getStatusCode() == response.CONFLICT) {
         } else if (!validation.isSuccess()) {
@@ -78,6 +80,7 @@ public class PatientControl {
         return new response(response.SUCCESS, "Información del paciente actualizada.");
     }
 
+    @Override
     public response getPatient(long patientId) {
         User found = store.findID(patientId);
         if (found == null || !(found instanceof Patient)) {
@@ -88,8 +91,8 @@ public class PatientControl {
         return new response(response.SUCCESS, "OK", data);
     }
 
-    
-    public response getAllPatients() {
+    @Override
+    public response getPatients() {
         ArrayList<Map<String, Object>> list = new ArrayList<>();
         for (User u : store.getUsers()) {
             if (u instanceof Patient) {
@@ -99,8 +102,7 @@ public class PatientControl {
         return new response(response.SUCCESS, "OK", list);
     }
 
-
-    private response PatientValidation(String idStr, String username, String password,
+    private response Patientval(String idStr, String username, String password,
             String confirmPassword, String email, String birthdateStr, String phoneStr) {
 
         if (!idStr.matches("\\d{12}") || Long.parseLong(idStr) <= 0) {
@@ -109,33 +111,27 @@ public class PatientControl {
         if (store.idExists(Long.parseLong(idStr))) {
             return new response(response.CONFLICT, "El ID ya está en uso.");
         }
-
         if (store.userExists(username)) {
             return new response(response.CONFLICT, "El nombre de usuario ya está en uso.");
         }
-
         if (!password.equals(confirmPassword)) {
             return new response(response.BAD_REQUEST, "Las contraseñas no coinciden.");
         }
-
         if (!phoneStr.matches("\\d{10}")) {
             return new response(response.BAD_REQUEST, "El teléfono debe tener exactamente 10 dígitos.");
         }
-
         if (!email.matches("^[^@]+@[^@]+\\.com$")) {
             return new response(response.BAD_REQUEST, "El email debe seguir el formato usuario@dominio.com");
         }
-
         try {
             LocalDate.parse(birthdateStr);
         } catch (DateTimeParseException e) {
             return new response(response.BAD_REQUEST, "La fecha de nacimiento debe seguir el formato AAAA-MM-DD.");
         }
-
         return new response(response.SUCCESS, "OK");
     }
 
-        private Map<String, Object> Patientserialize(Patient p) {
+    private Map<String, Object> Patientserialize(Patient p) {
         Map<String, Object> data = new HashMap<>();
         data.put("id", p.getId());
         data.put("username", p.getUsername());

@@ -27,6 +27,11 @@
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/Specialty.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/person/User.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/response.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/control/AppointmentControlint.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/control/AuthControlint.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/control/doctorControlint.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/control/hospitalizationControlint.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/control/patientControlint.java</file>
         </group>
     </open-files>
 </project-private>

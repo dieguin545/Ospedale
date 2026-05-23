@@ -103,7 +103,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
     }
 
     private void loadPatientCombo() {
-        response response = patientControl.getAllPatients();
+        response response = patientControl.getPatients();
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         model.addElement("Select one");
         if (response.isSuccess()) {
