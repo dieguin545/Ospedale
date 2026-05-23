@@ -23,6 +23,16 @@ public class Patient extends User {
     private ArrayList<Appointment> appointments;
     private Hospitalization hospitalization;
 
+    public Patient(long id, String username, String firstname, String lastname, String password, String email, LocalDate birthdate, boolean gender, long phone, String address) {
+        super(id, username, firstname, lastname, password);
+        this.email = email;
+        this.birthdate = birthdate;
+        this.gender = gender;
+        this.phone = phone;
+        this.address = address;
+        this.appointments = new ArrayList<>();
+    }
+    
     public void setEmail(String email) {
         this.email = email;
     }
@@ -55,14 +65,6 @@ public class Patient extends User {
         this.appointments.add(a);
     }
 
-    public Patient(long id, String username, String firstname, String lastname, String password, String email, LocalDate birthdate, boolean gender, long phone, String address) {
-        super(id, username, firstname, lastname, password);
-        this.email = email;
-        this.birthdate = birthdate;
-        this.gender = gender;
-        this.phone = phone;
-        this.address = address;
-        this.appointments = new ArrayList<>();
-    }
+
     
 }
