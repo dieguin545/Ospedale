@@ -4,17 +4,13 @@
  */
 package packagee.core.control;
 
-
 /**
  *
  * @author juand
  */
 import packagee.response;
-import packagee.response;
-
 
 interface AuthControlint {
-
 
     response login(String username, String password);
 }

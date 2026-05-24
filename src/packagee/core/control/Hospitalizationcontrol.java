@@ -8,6 +8,8 @@ package packagee.core.control;
  *
  * @author juand
  */
+import packagee.core.hospital.HospitalizationFormatter;
+import packagee.core.hospital.HospitalizationService;
 import packagee.core.person.User;
 import packagee.core.person.Doctor;
 import packagee.core.person.Patient;
@@ -24,51 +26,51 @@ import packagee.core.hospital.HospitalizationStatus;
 import packagee.response;
 import packagee.RoomType;
 
-public class Hospitalizationcontrol {
+public class Hospitalizationcontrol implements hospitalizationControlint {
 
-    private final DataBase store = DataBase.getInstance();
+    private final DataBase store;
+    private final HospitalizationFormatter formatter;
+    private final HospitalizationService service;
 
-    
-    public  response requestHospitalization(long patientId, long doctorId,
+    public Hospitalizationcontrol(DataBase store) {
+        this.store = store;
+        this.formatter = new HospitalizationFormatter();
+        this.service = new HospitalizationService(store);
+    }
+
+    @Override
+    public response requestHospitalization(long patientId, long doctorId,
             String dateStr, String reason, String roomTypeStr, String observations) {
 
-        User patientFound = store.findID(patientId);
-        if (patientFound == null || !(patientFound instanceof Patient)) {
-            return new response(response.NOT_FOUND, "Paciente no encontrado.");
-        }
-        User doctorFound = store.findID(doctorId);
-        if (doctorFound == null || !(doctorFound instanceof Doctor)) {
-            return new response(response.NOT_FOUND, "Doctor no encontrado.");
-        }
-
-        LocalDate date;
-        try {
-            date = LocalDate.parse(dateStr);
-        } catch (DateTimeParseException e) {
+        if (!validacionesformato.isValidDate(dateStr)) {
             return new response(response.BAD_REQUEST, "Fecha inválida. Formato: AAAA-MM-DD");
         }
 
-        RoomType roomType;
-        try {
-            roomType = RoomType.valueOf(roomTypeStr.toUpperCase());
-        } catch (IllegalArgumentException e) {
+        Patient patient = getPatientOrNull(patientId);
+        if (patient == null) {
+            return new response(response.NOT_FOUND, "Paciente no encontrado.");
+        }
+
+        Doctor doctor = getDoctorOrNull(doctorId);
+        if (doctor == null) {
+            return new response(response.NOT_FOUND, "Doctor no encontrado.");
+        }
+
+        LocalDate date = LocalDate.parse(dateStr);
+        RoomType roomType = service.parseRoomType(roomTypeStr);
+        if (roomType == null) {
             return new response(response.BAD_REQUEST, "Tipo de habitación inválido.");
         }
 
-        Patient patient = (Patient) patientFound;
-        Doctor doctor = (Doctor) doctorFound;
-
-        String hospId = store.genHospitalizationID(patientId);
-        Hospitalization hospitalization = new Hospitalization(hospId, patient, doctor,
+        Hospitalization hospitalization = service.createHospitalization(patient, doctor,
                 date, reason, roomType, observations);
+        service.saveHospitalization(hospitalization);
 
-        store.addHospitalization(hospitalization);
-        patient.setHospitalization(hospitalization);
-        doctor.addHospitalization(hospitalization);
-
-        return new response(response.SUCCESS, "Hospitalización solicitada. ID: " + hospId);
+        return new response(response.SUCCESS, "Hospitalización solicitada. ID: " + 
+                           hospitalization.getId());
     }
 
+    @Override
     public response hospitalizeFromAppointment(String appointmentId, long doctorId,
             String dateStr, String reason, String roomTypeStr, String observations) {
 
@@ -76,91 +78,110 @@ public class Hospitalizationcontrol {
         if (appointment == null) {
             return new response(response.NOT_FOUND, "Cita no encontrada.");
         }
+
         if (appointment.getDoctor().getId() != doctorId) {
-            return new response(response.UNAUTHORIZED, "Este doctor no es el asignado a esta cita.");
-        }
-        if (appointment.getStatus() != AppointmentStatus.PENDING) {
-            return new response(response.BAD_REQUEST, "Solo se puede hospitalizar desde citas PENDING.");
+            return new response(response.UNAUTHORIZED, 
+                "Este doctor no es el asignado a esta cita.");
         }
 
-        LocalDate date;
-        try {
-            date = LocalDate.parse(dateStr);
-        } catch (DateTimeParseException e) {
+        if (appointment.getStatus() != AppointmentStatus.PENDING) {
+            return new response(response.BAD_REQUEST, 
+                "Solo se puede hospitalizar desde citas PENDING.");
+        }
+
+        if (!validacionesformato.isValidDate(dateStr)) {
             return new response(response.BAD_REQUEST, "Fecha inválida. Formato: AAAA-MM-DD");
         }
 
-        RoomType roomType;
-        try {
-            roomType = RoomType.valueOf(roomTypeStr.toUpperCase());
-        } catch (IllegalArgumentException e) {
+        LocalDate date = LocalDate.parse(dateStr);
+        RoomType roomType = service.parseRoomType(roomTypeStr);
+        if (roomType == null) {
             return new response(response.BAD_REQUEST, "Tipo de habitación inválido.");
         }
 
         Patient patient = appointment.getPatient();
         Doctor doctor = appointment.getDoctor();
-
+        
         appointment.setStatus(AppointmentStatus.COMPLETED);
+        
+        Hospitalization hospitalization = service.createHospitalizationFromAppointment(
+                patient, doctor, date, reason, roomType, observations);
+        service.saveHospitalization(hospitalization);
 
-        String hospId = store.genHospitalizationID(patient.getId());
-        Hospitalization hospitalization = new Hospitalization(hospId, patient, doctor,
-                date, reason, roomType, observations, HospitalizationStatus.ONGOING);
-
-        store.addHospitalization(hospitalization);
-        patient.setHospitalization(hospitalization);
-        doctor.addHospitalization(hospitalization);
-
-        return new response(response.SUCCESS, "Paciente hospitalizado. ID: " + hospId);
+        return new response(response.SUCCESS, "Paciente hospitalizado. ID: " + 
+                           hospitalization.getId());
     }
 
+    @Override
     public response approveHospitalization(String hospId, long doctorId) {
-        Hospitalization hosp = store.findHospitalizationID(hospId);
+        Hospitalization hosp = getHospitalizationOrNull(hospId);
         if (hosp == null) {
             return new response(response.NOT_FOUND, "Hospitalización no encontrada.");
         }
+
         if (hosp.getDoctor().getId() != doctorId) {
-            return new response(response.UNAUTHORIZED, "Este doctor no está asignado a esta hospitalización.");
+            return new response(response.UNAUTHORIZED, 
+                "Este doctor no está asignado a esta hospitalización.");
         }
+
         if (hosp.getStatus() != HospitalizationStatus.REQUESTED) {
-            return new response(response.BAD_REQUEST, "Solo se pueden aprobar hospitalizaciones en estado REQUESTED.");
+            return new response(response.BAD_REQUEST, 
+                "Solo se pueden aprobar hospitalizaciones en estado REQUESTED.");
         }
+
         hosp.setStatus(HospitalizationStatus.ONGOING);
         return new response(response.SUCCESS, "Hospitalización aprobada.");
     }
 
+    @Override
     public response cancelHospitalization(String hospId, long doctorId) {
-        Hospitalization hosp = store.findHospitalizationID(hospId);
+        Hospitalization hosp = getHospitalizationOrNull(hospId);
         if (hosp == null) {
             return new response(response.NOT_FOUND, "Hospitalización no encontrada.");
         }
+
         if (hosp.getDoctor().getId() != doctorId) {
-            return new response(response.UNAUTHORIZED, "Este doctor no está asignado a esta hospitalización.");
+            return new response(response.UNAUTHORIZED, 
+                "Este doctor no está asignado a esta hospitalización.");
         }
-        if (hosp.getStatus() == HospitalizationStatus.ONGOING) {
-            return new response(response.BAD_REQUEST, "No se puede cancelar una hospitalización en curso.");
+
+        if (hosp.getStatus() != HospitalizationStatus.REQUESTED) {
+            return new response(response.BAD_REQUEST, 
+                "Solo se pueden cancelar hospitalizaciones en estado REQUESTED.");
         }
+
         hosp.setStatus(HospitalizationStatus.CANCELED);
         return new response(response.SUCCESS, "Hospitalización cancelada.");
     }
 
+    @Override
     public response getAllHospitalizations() {
         ArrayList<Map<String, Object>> list = new ArrayList<>();
         for (Hospitalization h : store.getHospitalizations()) {
-            list.add(serializeHospitalization(h));
+            list.add(formatter.toMap(h));
         }
         return new response(response.SUCCESS, "OK", list);
     }
 
-    private Map<String, Object> serializeHospitalization(Hospitalization h) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("id", h.getId());
-        data.put("patientName", h.getPatient().getFirstname() + " " + h.getPatient().getLastname());
-        data.put("doctorName", h.getDoctor().getFirstname() + " " + h.getDoctor().getLastname());
-        data.put("date", h.getDate().toString());
-        data.put("reason", h.getReason());
-        data.put("roomType", h.getRoomType().name());
-        data.put("status", h.getStatus().name());
-        data.put("observations", h.getObservations());
-        return data;
+
+    private Patient getPatientOrNull(long patientId) {
+        User found = store.findID(patientId);
+        if (found instanceof Patient) {
+            return (Patient) found;
+        }
+        return null;
     }
+
+    private Doctor getDoctorOrNull(long doctorId) {
+        User found = store.findID(doctorId);
+        if (found instanceof Doctor) {
+            return (Doctor) found;
+        }
+        return null;
+    }
+
+    private Hospitalization getHospitalizationOrNull(String hospId) {
+        return store.findHospitalizationID(hospId);
+    }
+
 }

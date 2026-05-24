@@ -10,7 +10,8 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import packagee.core.control.Authcontrol;
-import packagee.core.person.PatientControl;
+import packagee.core.control.PatientControl;
+import packagee.core.hospital.DataBase;
 import packagee.response;
 
 /**
@@ -21,11 +22,15 @@ import packagee.response;
 public class NewJFrame extends javax.swing.JFrame {
 
     private int x, y;
-    private final PatientControl patientControl = new PatientControl();
-    private final Authcontrol authcontrol = new Authcontrol();
+    private final DataBase store;
+    private final PatientControl patientControl;
+    private final Authcontrol authcontrol;
 
-    public NewJFrame() {
+    public NewJFrame(DataBase store) {
         initComponents();
+        this.store = DataBase.getInstance();
+        this.patientControl = new PatientControl(store);
+        this.authcontrol = new Authcontrol();
         this.setBackground(new Color(0, 0, 0, 0));
         this.setLocationRelativeTo(null);
     }
@@ -332,13 +337,13 @@ public class NewJFrame extends javax.swing.JFrame {
 
         switch (usuario) {
             case "ADMIN":
-                new NewJFrame11(userId).setVisible(true);
+                new NewJFrame11(userId,store).setVisible(true);
                 break;
             case "DOCTOR":
-                new NewJFrame111(userId, userId).setVisible(true);
+                new NewJFrame111(userId, userId,store).setVisible(true);
                 break;
             case "PATIENT":
-                new NewJFrame1(userId, userId).setVisible(true);
+                new NewJFrame1(userId, userId,store).setVisible(true);
                 break;
         }
     }//GEN-LAST:event_jButton2ActionPerformed

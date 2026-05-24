@@ -19,7 +19,6 @@ public class Prescription {
 
     public Prescription(Appointment appointment, String medicationName, double dose, String administrationRoute, int treatmentDuration, String additionalInstructions, int frecuency) {
         this.appointment = appointment;
-        appointment.addPrescription(this);
         this.medicationName = medicationName;
         this.dose = dose;
         this.administrationRoute = administrationRoute;
@@ -27,7 +26,4 @@ public class Prescription {
         this.additionalInstructions = additionalInstructions;
         this.frecuency = frecuency;
     }
-    
-    
-    
 }

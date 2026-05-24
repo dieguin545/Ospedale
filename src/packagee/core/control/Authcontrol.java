@@ -19,6 +19,8 @@ import packagee.response;
 
 public class Authcontrol implements AuthControlint {
 
+
+
     private final DataBase store = DataBase.getInstance();
 
     @Override

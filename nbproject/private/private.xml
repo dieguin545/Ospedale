@@ -17,7 +17,7 @@
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/hospital/Hospitalization.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/hospital/HospitalizationStatus.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/Main.java</file>
-            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/person/PatientControl.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/control/PatientControl.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/person/Patient.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/person/Administrator.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/NewJFrame111.java</file>
@@ -32,6 +32,16 @@
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/control/doctorControlint.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/control/hospitalizationControlint.java</file>
             <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/control/patientControlint.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/control/validaciones.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/control/validacionesformato.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/control/AppointmentFormatter.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/control/DoctorFormatter.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/control/PatientFormatter.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/hospital/HospitalizationFormatter.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/control/AppointmentService.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/control/DoctorService.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/control/PatientService.java</file>
+            <file>file:/C:/Users/juand/OneDrive/Desktop/Ospedale/src/packagee/core/hospital/HospitalizationService.java</file>
         </group>
     </open-files>
 </project-private>

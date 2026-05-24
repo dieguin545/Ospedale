@@ -10,7 +10,8 @@ import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import packagee.core.control.DoctorControl;
-import packagee.core.person.PatientControl;
+import packagee.core.control.PatientControl;
+import packagee.core.hospital.DataBase;
 import packagee.response;
 
 /**
@@ -22,12 +23,16 @@ public class NewJFrame11 extends javax.swing.JFrame {
 
     private int x, y;
     private final long adminId;
-    private final DoctorControl doctorControl = new DoctorControl();
-    private final PatientControl patientControl = new PatientControl();
+    private final DataBase store;
+        private final DoctorControl doctorControl;
+    private final PatientControl patientControl;
 
-    public NewJFrame11(long adminId) {
+    public NewJFrame11(long adminId,DataBase store) {
         initComponents();
         this.adminId = adminId;
+        this.store = store;
+        this.doctorControl = new DoctorControl(store);
+        this.patientControl = new PatientControl(store);
         this.setBackground(new Color(0, 0, 0, 0));
         this.setLocationRelativeTo(null);
         loadDoctorCombo();
@@ -35,7 +40,7 @@ public class NewJFrame11 extends javax.swing.JFrame {
     }
 
     private void loadDoctorCombo() {
-        response response = doctorControl.getDoctors();
+        response response = doctorControl.getAllDoctors();
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         model.addElement("Select one");
         if (response.isSuccess()) {
@@ -48,7 +53,7 @@ public class NewJFrame11 extends javax.swing.JFrame {
     }
 
     private void loadPatientCombo() {
-        response response = patientControl.getPatients();
+        response response = patientControl.getAllPatients();
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         model.addElement("Select one");
         if (response.isSuccess()) {
@@ -325,7 +330,7 @@ public class NewJFrame11 extends javax.swing.JFrame {
         }
         long doctorId = Long.parseLong(selected);
         this.setVisible(false);
-        new NewJFrame111(adminId, doctorId).setVisible(true);
+        new NewJFrame111(adminId, doctorId,store).setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -336,12 +341,12 @@ public class NewJFrame11 extends javax.swing.JFrame {
         }
         long patientId = Long.parseLong(selected);
         this.setVisible(false);
-        new NewJFrame1(adminId, patientId).setVisible(true);
+        new NewJFrame1(adminId, patientId,store).setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
         this.setVisible(false);
-        new NewJFrame().setVisible(true);
+        new NewJFrame(store).setVisible(true);
     }//GEN-LAST:event_jButton10ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

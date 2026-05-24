@@ -14,7 +14,8 @@ import packagee.Specialty;
 import packagee.core.control.AppointmentControl;
 import packagee.core.control.Hospitalizationcontrol;
 import packagee.core.control.DoctorControl;
-import packagee.core.person.PatientControl;
+import packagee.core.control.PatientControl;
+import packagee.core.hospital.DataBase;
 import packagee.response;
 
 /**
@@ -27,15 +28,21 @@ public class NewJFrame1 extends javax.swing.JFrame {
     private int x, y;
     private final long loggedUserId;
     private final long patientId;
-    private final PatientControl patientControl = new PatientControl();
-    private final AppointmentControl appointmentControl = new AppointmentControl();
-    private final Hospitalizationcontrol hospitalizationControl = new Hospitalizationcontrol();
-    private final DoctorControl doctorControl = new DoctorControl();
+    private final PatientControl patientControl ;
+    private final AppointmentControl appointmentControl;
+    private final Hospitalizationcontrol hospitalizationControl;
+    private final DoctorControl doctorControl;
+    private final DataBase store;
 
-    public NewJFrame1(long loggedUserId, long patientId) {
+    public NewJFrame1(long loggedUserId, long patientId,DataBase store) {
         initComponents();
         this.loggedUserId = loggedUserId;
         this.patientId = patientId;
+        this.store = store;
+        this.patientControl = new PatientControl(store);
+        this.appointmentControl = new AppointmentControl(store);
+        this.hospitalizationControl = new Hospitalizationcontrol(store);
+        this.doctorControl = new DoctorControl(store);
         jButton7.setVisible(loggedUserId != patientId);
         this.setBackground(new Color(0, 0, 0, 0));
         this.setLocationRelativeTo(null);
@@ -55,7 +62,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
     }
 
     private void loadDoctorCombo() {
-        response response = doctorControl.getDoctors();
+        response response = doctorControl.getAllDoctors();
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         model.addElement("Select one");
         if (response.isSuccess()) {
@@ -405,12 +412,12 @@ public class NewJFrame1 extends javax.swing.JFrame {
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         this.setVisible(false);
-        new NewJFrame().setVisible(true);
+        new NewJFrame(store).setVisible(true);
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         this.setVisible(false);
-        new NewJFrame11(loggedUserId).setVisible(true);
+        new NewJFrame11(loggedUserId,store).setVisible(true);
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
@@ -435,7 +442,7 @@ public class NewJFrame1 extends javax.swing.JFrame {
 
     private void jRadioButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton4ActionPerformed
         jRadioButton3.setSelected(false);
-        response response = doctorControl.getDoctors();
+        response response = doctorControl.getAllDoctors();
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         model.addElement("Select one");
         if (response.isSuccess()) {

@@ -27,181 +27,194 @@ import packagee.Specialty;
  * @author juand
  */
 
-public class AppointmentControl {
+public class AppointmentControl implements AppointmentControlint {
 
-    private final DataBase store = DataBase.getInstance();
+    private final DataBase store;
+    private final validacionesformato validator;
+    private final AppointmentFormatter formatter;
+    private final AppointmentService service;
 
+    public AppointmentControl(DataBase store) {
+        this.store = store;
+        this.validator = new validacionesformato();
+        this.formatter = new AppointmentFormatter();
+        this.service = new AppointmentService(store);
+    }
 
+    @Override
     public response requestAppointment(long patientId, boolean byDoctor,
             String doctorOrSpecialtyStr, String dateStr, String timeStr,
             String reason, boolean isInPerson) {
 
-        User found = store.findID(patientId);
-        if (found == null || !(found instanceof Patient)) {
-            return new response(response.NOT_FOUND, "Paciente no encontrado.");
-        }
-        Patient patient = (Patient) found;
-
-        LocalDate date;
-        try {
-            date = LocalDate.parse(dateStr);
-        } catch (DateTimeParseException e) {
+        if (!validacionesformato.isValidDate(dateStr)) {
             return new response(response.BAD_REQUEST, "Fecha inválida. Formato: AAAA-MM-DD");
         }
 
-        if (!timeStr.matches("\\d{2}:\\d{2}")) {
+        if (!validacionesformato.isValidTime(timeStr)) {
             return new response(response.BAD_REQUEST, "Hora inválida. Formato: hh:mm");
         }
-        int hour = Integer.parseInt(timeStr.substring(0, 2));
-        int minute = Integer.parseInt(timeStr.substring(3));
-        if (hour < 0 || hour > 23 || (minute != 0 && minute != 15 && minute != 30 && minute != 45)) {
-            return new response(response.BAD_REQUEST, "Los minutos deben ser 00, 15, 30 o 45.");
+
+        Patient patient = getPatientOrNull(patientId);
+        if (patient == null) {
+            return new response(response.NOT_FOUND, "Paciente no encontrado.");
         }
-        LocalDateTime datetime = LocalDateTime.of(date, LocalTime.of(hour, minute));
 
         Doctor doctor;
         Specialty specialty;
 
         if (byDoctor) {
-            long docId;
-            try {
-                docId = Long.parseLong(doctorOrSpecialtyStr);
-            } catch (NumberFormatException e) {
-                return new response(response.BAD_REQUEST, "ID de doctor inválido.");
+            doctor = findDoctorById(doctorOrSpecialtyStr, dateStr, timeStr);
+            if (doctor == null) {
+                return new response(response.CONFLICT, 
+                    "El doctor no tiene disponibilidad en ese horario.");
             }
-            User docFound = store.findID(docId);
-            if (docFound == null || !(docFound instanceof Doctor)) {
-                return new response(response.NOT_FOUND, "Doctor no encontrado.");
-            }
-            doctor = (Doctor) docFound;
             specialty = doctor.getSpecialty();
-
-            if (!store.doctorAvailable(doctor, datetime)) {
-                return new response(response.CONFLICT, "El doctor no tiene disponibilidad en ese horario.");
-            }
         } else {
-            try {
-                specialty = Specialty.valueOf(
-                        doctorOrSpecialtyStr.replaceAll(" & ", "_").replaceAll(" ", "_").toUpperCase());
-            } catch (IllegalArgumentException e) {
+            specialty = service.parseSpecialty(doctorOrSpecialtyStr);
+            if (specialty == null) {
                 return new response(response.BAD_REQUEST, "Especialidad inválida.");
             }
-            ArrayList<Doctor> available = store.getdoctorsSpeciality(specialty, datetime);
-            if (available.isEmpty()) {
-                return new response(response.CONFLICT, "No hay doctores disponibles para esa especialidad y horario.");
+
+            doctor = service.findAvailableDoctorBySpecialty(specialty, 
+                    parseDateTime(dateStr, timeStr));
+            if (doctor == null) {
+                return new response(response.CONFLICT, 
+                    "No hay doctores disponibles para esa especialidad y horario.");
             }
-            doctor = available.get(0); // asigna el primero disponible
         }
 
-        String appointmentId = store.generateAppID(patientId);
-        Appointment appointment = new Appointment(appointmentId, patient, doctor,
-                specialty, datetime, reason, isInPerson);
+        LocalDateTime datetime = parseDateTime(dateStr, timeStr);
+        Appointment appointment = service.createAppointment(patient, doctor, 
+                                                            datetime, reason, isInPerson);
+        service.saveAppointment(appointment, patient, doctor);
 
-        store.addAppointment(appointment);
-        patient.addAppointment(appointment);
-        doctor.addAppointment(appointment);
-
-        return new response(response.SUCCESS, "Cita solicitada exitosamente. ID: " + appointmentId);
+        return new response(response.SUCCESS, "Cita solicitada exitosamente. ID: " + 
+                           appointment.getId(), formatter.toMap(appointment));
     }
 
-
+    @Override
     public response acceptAppointment(String appointmentId, long doctorId) {
-        Appointment appointment = store.findIDapp(appointmentId);
+        Appointment appointment = getAppointmentOrNull(appointmentId);
         if (appointment == null) {
-            return new 
-                    response(response.NOT_FOUND, "Cita no encontrada.");
+            return new response(response.NOT_FOUND, "Cita no encontrada.");
         }
+
+        Doctor doctor = getDoctorOrNull(doctorId);
+        if (doctor == null) {
+            return new response(response.NOT_FOUND, "Doctor no encontrado.");
+        }
+
         if (appointment.getDoctor().getId() != doctorId) {
-            return new response(response.UNAUTHORIZED, "Este doctor no es el asignado a esta cita.");
+            return new response(response.UNAUTHORIZED, 
+                "Este doctor no es el asignado a esta cita.");
         }
+
         if (appointment.getStatus() != AppointmentStatus.REQUESTED) {
-            return new response(response.BAD_REQUEST, "Solo se pueden aceptar citas en estado REQUESTED.");
+            return new response(response.BAD_REQUEST, 
+                "Solo se pueden aceptar citas en estado REQUESTED.");
         }
+
         appointment.setStatus(AppointmentStatus.PENDING);
         return new response(response.SUCCESS, "Cita aceptada.");
     }
 
-
+    @Override
     public response completeAppointment(String appointmentId, long doctorId,
-            String diagnosis, String observations, String recommendedTreatment, String followUp) {
-        Appointment appointment = store.findIDapp(appointmentId);
+            String diagnosis, String observations, String recommendedTreatment, 
+            String followUp) {
+        
+        Appointment appointment = getAppointmentOrNull(appointmentId);
         if (appointment == null) {
             return new response(response.NOT_FOUND, "Cita no encontrada.");
         }
+
         if (appointment.getDoctor().getId() != doctorId) {
-            return new response(response.UNAUTHORIZED, "Este doctor no es el asignado a esta cita.");
+            return new response(response.UNAUTHORIZED, 
+                "Este doctor no es el asignado a esta cita.");
         }
+
         if (appointment.getStatus() != AppointmentStatus.PENDING) {
-            return new response(response.BAD_REQUEST, "Solo se pueden completar citas en estado PENDING.");
+            return new response(response.BAD_REQUEST, 
+                "Solo se pueden completar citas en estado PENDING.");
         }
+
         appointment.setStatus(AppointmentStatus.COMPLETED);
         appointment.setDiagnosis(diagnosis);
         appointment.setObservations(observations);
         appointment.setRecommendedTreatment(recommendedTreatment);
         appointment.setFollowUp(followUp);
+
         return new response(response.SUCCESS, "Cita completada.");
     }
 
-
+    @Override
     public response cancelAppointment(String appointmentId, long patientId) {
-        Appointment appointment = store.findIDapp(appointmentId);
+        Appointment appointment = getAppointmentOrNull(appointmentId);
         if (appointment == null) {
             return new response(response.NOT_FOUND, "Cita no encontrada.");
         }
+
         if (appointment.getPatient().getId() != patientId) {
-            return new response(response.UNAUTHORIZED, "Esta cita no pertenece a este paciente.");
+            return new response(response.UNAUTHORIZED, 
+                "Esta cita no pertenece a este paciente.");
         }
+
         if (appointment.getStatus() == AppointmentStatus.COMPLETED) {
-            return new response(response.BAD_REQUEST, "No se puede cancelar una cita ya completada.");
+            return new response(response.BAD_REQUEST, 
+                "No se puede cancelar una cita ya completada.");
         }
+
         appointment.setStatus(AppointmentStatus.CANCELED);
         return new response(response.SUCCESS, "Cita cancelada.");
     }
 
-
+    @Override
     public response rescheduleAppointment(String appointmentId, long doctorId,
             String newTimeStr, String rescheduleReason) {
-        Appointment appointment = store.findIDapp(appointmentId);
+        
+        Appointment appointment = getAppointmentOrNull(appointmentId);
         if (appointment == null) {
             return new response(response.NOT_FOUND, "Cita no encontrada.");
         }
+
         if (appointment.getDoctor().getId() != doctorId) {
-            return new response(response.UNAUTHORIZED, "Este doctor no es el asignado a esta cita.");
+            return new response(response.UNAUTHORIZED, 
+                "Este doctor no es el asignado a esta cita.");
         }
 
-        if (!newTimeStr.matches("\\d{2}:\\d{2}")) {
+        if (!validacionesformato.isValidTime(newTimeStr)) {
             return new response(response.BAD_REQUEST, "Hora inválida. Formato: hh:mm");
         }
-        int hour = Integer.parseInt(newTimeStr.substring(0, 2));
-        int minute = Integer.parseInt(newTimeStr.substring(3));
-        if (hour < 0 || hour > 23 || (minute != 0 && minute != 15 && minute != 30 && minute != 45)) {
-            return new response(response.BAD_REQUEST, "Los minutos deben ser 00, 15, 30 o 45.");
-        }
 
-        LocalDateTime newDatetime = LocalDateTime.of(appointment.getDatetime().toLocalDate(),
-                LocalTime.of(hour, minute));
+        LocalDateTime newDatetime = LocalDateTime.of(
+            appointment.getDatetime().toLocalDate(),
+            LocalTime.parse(newTimeStr));
+        
         appointment.setDatetime(newDatetime);
-
         String updatedReason = appointment.getReason() + " | Reagendado: " + rescheduleReason;
         appointment.setReason(updatedReason);
 
         return new response(response.SUCCESS, "Cita reagendada.");
     }
 
-
+    @Override
     public response prescribeMedication(String appointmentId, long doctorId,
             String medicationName, double dose, String administrationRoute,
             int treatmentDuration, String additionalInstructions, int frecuency) {
 
-        Appointment appointment = store.findIDapp(appointmentId);
+        Appointment appointment = getAppointmentOrNull(appointmentId);
         if (appointment == null) {
             return new response(response.NOT_FOUND, "Cita no encontrada.");
         }
+
         if (appointment.getDoctor().getId() != doctorId) {
-            return new response(response.UNAUTHORIZED, "Este doctor no es el asignado a esta cita.");
+            return new response(response.UNAUTHORIZED, 
+                "Este doctor no es el asignado a esta cita.");
         }
+
         if (appointment.getStatus() != AppointmentStatus.PENDING) {
-            return new response(response.BAD_REQUEST, "Solo se pueden prescribir medicamentos en citas PENDING.");
+            return new response(response.BAD_REQUEST, 
+                "Solo se pueden prescribir medicamentos en citas PENDING.");
         }
 
         Prescription prescription = new Prescription(appointment, medicationName, dose,
@@ -211,29 +224,31 @@ public class AppointmentControl {
         return new response(response.SUCCESS, "Medicamento prescrito exitosamente.");
     }
 
+    @Override
     public response getPatientAppointments(long patientId) {
-        User found = store.findID(patientId);
-        if (found == null || !(found instanceof Patient)) {
+        Patient patient = getPatientOrNull(patientId);
+        if (patient == null) {
             return new response(response.NOT_FOUND, "Paciente no encontrado.");
         }
-        Patient patient = (Patient) found;
+
         ArrayList<Appointment> sorted = new ArrayList<>(patient.getAppointments());
         sorted.sort(Comparator.comparing(Appointment::getDatetime).reversed());
 
         ArrayList<Map<String, Object>> list = new ArrayList<>();
         for (Appointment a : sorted) {
-            list.add(serializeAppointment(a));
+            list.add(formatter.toMap(a));
         }
+
         return new response(response.SUCCESS, "OK", list);
     }
 
-
+    @Override
     public response getDoctorAppointments(long doctorId, boolean pendingOnly) {
-        User found = store.findID(doctorId);
-        if (found == null || !(found instanceof Doctor)) {
+        Doctor doctor = getDoctorOrNull(doctorId);
+        if (doctor == null) {
             return new response(response.NOT_FOUND, "Doctor no encontrado.");
         }
-        Doctor doctor = (Doctor) found;
+
         ArrayList<Appointment> sorted = new ArrayList<>(doctor.getAppointments());
         if (pendingOnly) {
             sorted.removeIf(a -> a.getStatus() != AppointmentStatus.PENDING);
@@ -242,21 +257,53 @@ public class AppointmentControl {
 
         ArrayList<Map<String, Object>> list = new ArrayList<>();
         for (Appointment a : sorted) {
-            list.add(serializeAppointment(a));
+            list.add(formatter.toMap(a));
         }
+
         return new response(response.SUCCESS, "OK", list);
     }
 
-    private Map<String, Object> serializeAppointment(Appointment a) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("id", a.getId());
-        data.put("datetime", a.getDatetime().toString());
-        data.put("doctorName", a.getDoctor().getFirstname() + " " + a.getDoctor().getLastname());
-        data.put("patientName", a.getPatient().getFirstname() + " " + a.getPatient().getLastname());
-        data.put("specialty", a.getSpecialty().name());
-        data.put("type", a.isType() ? "In-person" : "Remote");
-        data.put("status", a.getStatus().name());
-        data.put("reason", a.getReason());
-        return data;
+    // ========== MÉTODOS HELPER ==========
+
+    private Patient getPatientOrNull(long patientId) {
+        User found = store.findID(patientId);
+        if (found instanceof Patient) {
+            return (Patient) found;
+        }
+        return null;
     }
+
+    private Doctor getDoctorOrNull(long doctorId) {
+        User found = store.findID(doctorId);
+        if (found instanceof Doctor) {
+            return (Doctor) found;
+        }
+        return null;
+    }
+
+    private Appointment getAppointmentOrNull(String appointmentId) {
+        return store.findIDapp(appointmentId);
+    }
+
+    private Doctor findDoctorById(String doctorIdStr, String dateStr, String timeStr) {
+        try {
+            long docId = Long.parseLong(doctorIdStr);
+            Doctor doctor = getDoctorOrNull(docId);
+            
+            if (doctor != null && store.doctorAvailable(doctor, 
+                    parseDateTime(dateStr, timeStr))) {
+                return doctor;
+            }
+        } catch (NumberFormatException e) {
+            return null;
+        }
+        return null;
+    }
+
+    private LocalDateTime parseDateTime(String dateStr, String timeStr) {
+        LocalDate date = LocalDate.parse(dateStr);
+        LocalTime time = LocalTime.parse(timeStr);
+        return LocalDateTime.of(date, time);
+    }
+
 }

@@ -11,6 +11,7 @@ package packagee;
 import packagee.core.NewJFrame;
 import com.formdev.flatlaf.FlatDarkLaf;
 import javax.swing.UIManager;
+import packagee.core.hospital.DataBase;
 
 
 public class Main {
@@ -25,7 +26,8 @@ public class Main {
         }
 
         java.awt.EventQueue.invokeLater(() -> {
-            new NewJFrame().setVisible(true);
+            DataBase store = null;
+            new NewJFrame(store).setVisible(true);
         });
     }
 }

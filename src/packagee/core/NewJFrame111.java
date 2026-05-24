@@ -13,7 +13,8 @@ import javax.swing.table.DefaultTableModel;
 import packagee.core.control.AppointmentControl;
 import packagee.core.control.DoctorControl;
 import packagee.core.control.Hospitalizationcontrol;
-import packagee.core.person.PatientControl;
+import packagee.core.control.PatientControl;
+import packagee.core.hospital.DataBase;
 import packagee.response;
 
 /**
@@ -26,16 +27,22 @@ public class NewJFrame111 extends javax.swing.JFrame {
     private int x, y;
     private final long loggedUserId;
     private final long doctorId;
-    private final DoctorControl doctorControl = new DoctorControl();
-    private final AppointmentControl appointmentControl = new AppointmentControl();
-    private final Hospitalizationcontrol hospitalizationControl = new Hospitalizationcontrol();
-    private final PatientControl patientControl = new PatientControl();
+    private final DoctorControl doctorControl;
+    private final AppointmentControl appointmentControl;
+    private final Hospitalizationcontrol hospitalizationControl;
+    private final PatientControl patientControl;
     private final ArrayList<Object[]> prescriptionBuffer = new ArrayList<>();
+    private final DataBase store;
 
-    public NewJFrame111(long loggedUserId, long doctorId) {
+    public NewJFrame111(long loggedUserId, long doctorId,DataBase store) {
         initComponents();
         this.loggedUserId = loggedUserId;
         this.doctorId = doctorId;
+        this.store = store;
+        this.doctorControl = new DoctorControl(store);
+        this.appointmentControl = new AppointmentControl(store);
+        this.hospitalizationControl = new Hospitalizationcontrol(store);
+        this.patientControl = new PatientControl(store);
         jButton11.setVisible(loggedUserId != doctorId);
         this.setBackground(new Color(0, 0, 0, 0));
         this.setLocationRelativeTo(null);
@@ -103,7 +110,7 @@ public class NewJFrame111 extends javax.swing.JFrame {
     }
 
     private void loadPatientCombo() {
-        response response = patientControl.getPatients();
+        response response = patientControl.getAllPatients();
         DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
         model.addElement("Select one");
         if (response.isSuccess()) {
@@ -529,12 +536,12 @@ public class NewJFrame111 extends javax.swing.JFrame {
 
     private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
         this.setVisible(false);
-        new NewJFrame().setVisible(true);
+        new NewJFrame(store).setVisible(true);
     }//GEN-LAST:event_jButton12ActionPerformed
 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
         this.setVisible(false);
-        new NewJFrame11(loggedUserId).setVisible(true);
+        new NewJFrame11(loggedUserId,store).setVisible(true);
     }//GEN-LAST:event_jButton11ActionPerformed
 
     private void jRadioButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton3ActionPerformed
