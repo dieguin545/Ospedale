@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package packagee.core.control;
+package packagee.core.hospital;
 
 /**
  *
@@ -11,8 +11,8 @@ package packagee.core.control;
 import packagee.core.hospital.HospitalizationFormatter;
 import packagee.core.hospital.HospitalizationService;
 import packagee.core.person.User;
-import packagee.core.person.Doctor;
-import packagee.core.person.Patient;
+import packagee.core.Doctor.Doctor;
+import packagee.core.Patient.Patient;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
@@ -25,6 +25,7 @@ import packagee.core.hospital.Hospitalization;
 import packagee.core.hospital.HospitalizationStatus;
 import packagee.response;
 import packagee.RoomType;
+import packagee.core.control.validacionesformato;
 
 public class Hospitalizationcontrol implements hospitalizationControlint {
 

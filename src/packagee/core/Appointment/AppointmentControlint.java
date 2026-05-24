@@ -1,4 +1,4 @@
-package packagee.core.control;
+package packagee.core.Appointment;
 
 import packagee.response;
 

@@ -2,19 +2,23 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package packagee.core.control;
+package packagee.core.Doctor;
 
 /**
  *
  * @author juand
  */
+import packagee.core.Doctor.DoctorFormatter;
+import packagee.core.Doctor.DoctorService;
+import packagee.core.Doctor.doctorControlint;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import packagee.core.hospital.DataBase;
 import packagee.response;
 import packagee.Specialty;
-import packagee.core.person.Doctor;
+import packagee.core.Doctor.Doctor;
+import packagee.core.control.validacionesformato;
 import packagee.core.person.User;
 
 public class DoctorControl implements doctorControlint {

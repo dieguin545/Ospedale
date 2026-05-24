@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import packagee.core.control.DoctorControl;
-import packagee.core.control.PatientControl;
+import packagee.core.Doctor.DoctorControl;
+import packagee.core.Patient.PatientControl;
 import packagee.core.hospital.DataBase;
 import packagee.response;
 

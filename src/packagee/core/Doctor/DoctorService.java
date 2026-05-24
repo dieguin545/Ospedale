@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package packagee.core.control;
+package packagee.core.Doctor;
 
 /**
  *
@@ -10,7 +10,7 @@ package packagee.core.control;
  */
 
 import packagee.core.hospital.DataBase;
-import packagee.core.person.Doctor;
+import packagee.core.Doctor.Doctor;
 import packagee.Specialty;
 
 

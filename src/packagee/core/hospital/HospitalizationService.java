@@ -14,8 +14,8 @@ import packagee.RoomType;
 import packagee.core.hospital.DataBase;
 import packagee.core.hospital.Hospitalization;
 import packagee.core.hospital.HospitalizationStatus;
-import packagee.core.person.Doctor;
-import packagee.core.person.Patient;
+import packagee.core.Doctor.Doctor;
+import packagee.core.Patient.Patient;
 
 
 public class HospitalizationService {

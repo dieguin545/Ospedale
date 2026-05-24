@@ -11,10 +11,10 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import packagee.Specialty;
-import packagee.core.control.AppointmentControl;
-import packagee.core.control.Hospitalizationcontrol;
-import packagee.core.control.DoctorControl;
-import packagee.core.control.PatientControl;
+import packagee.core.Appointment.AppointmentControl;
+import packagee.core.hospital.Hospitalizationcontrol;
+import packagee.core.Doctor.DoctorControl;
+import packagee.core.Patient.PatientControl;
 import packagee.core.hospital.DataBase;
 import packagee.response;
 

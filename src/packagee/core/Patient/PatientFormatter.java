@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package packagee.core.control;
+package packagee.core.Patient;
 
 /**
  *
@@ -11,7 +11,6 @@ package packagee.core.control;
 
 import java.util.HashMap;
 import java.util.Map;
-import packagee.core.person.Patient;
 
 
 public class PatientFormatter {

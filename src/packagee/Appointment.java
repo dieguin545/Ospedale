@@ -4,8 +4,8 @@
  */
 package packagee;
 
-import packagee.core.person.Doctor;
-import packagee.core.person.Patient;
+import packagee.core.Doctor.Doctor;
+import packagee.core.Patient.Patient;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 

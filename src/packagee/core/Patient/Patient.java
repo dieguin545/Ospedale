@@ -2,12 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package packagee.core.person;
+package packagee.core.Patient;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import packagee.Appointment;
 import packagee.core.hospital.Hospitalization;
+import packagee.core.person.User;
 
 /**
  *

@@ -2,11 +2,11 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package packagee.core.control;
+package packagee.core.Appointment;
 
 import packagee.core.person.User;
-import packagee.core.person.Doctor;
-import packagee.core.person.Patient;
+import packagee.core.Doctor.Doctor;
+import packagee.core.Patient.Patient;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -21,6 +21,7 @@ import packagee.core.hospital.DataBase;
 import packagee.Prescription;
 import packagee.response;
 import packagee.Specialty;
+import packagee.core.control.validacionesformato;
 
 /**
  *

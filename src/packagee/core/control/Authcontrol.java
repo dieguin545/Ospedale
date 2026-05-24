@@ -9,8 +9,8 @@ package packagee.core.control;
  * @author juand
  */
 import packagee.core.person.User;
-import packagee.core.person.Doctor;
-import packagee.core.person.Patient;
+import packagee.core.Doctor.Doctor;
+import packagee.core.Patient.Patient;
 import java.util.HashMap;
 import java.util.Map;
 import packagee.core.person.Administrator;

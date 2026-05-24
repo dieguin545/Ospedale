@@ -6,8 +6,8 @@ package packagee.core.hospital;
 
 import packagee.core.person.Administrator;
 import packagee.core.person.User;
-import packagee.core.person.Doctor;
-import packagee.core.person.Patient;
+import packagee.core.Doctor.Doctor;
+import packagee.core.Patient.Patient;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;

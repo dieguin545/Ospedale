@@ -10,7 +10,7 @@ import java.util.Map;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import packagee.core.control.Authcontrol;
-import packagee.core.control.PatientControl;
+import packagee.core.Patient.PatientControl;
 import packagee.core.hospital.DataBase;
 import packagee.response;
 

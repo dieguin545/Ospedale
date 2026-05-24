@@ -1,4 +1,4 @@
-package packagee.core.control;
+package packagee.core.Doctor;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -12,7 +12,7 @@ package packagee.core.control;
 
 import java.util.HashMap;
 import java.util.Map;
-import packagee.core.person.Doctor;
+import packagee.core.Doctor.Doctor;
 
 public class DoctorFormatter {
     
