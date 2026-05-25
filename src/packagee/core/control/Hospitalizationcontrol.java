@@ -18,11 +18,11 @@ import java.util.HashMap;
 import java.util.Map;
 import packagee.Appointment;
 import packagee.AppointmentStatus;
-import packagee.core.hospital.DataBase;
 import packagee.core.hospital.Hospitalization;
 import packagee.core.hospital.HospitalizationStatus;
 import packagee.response;
 import packagee.RoomType;
+import packagee.core.hospital.DataBase;
 
 public class Hospitalizationcontrol {
 
