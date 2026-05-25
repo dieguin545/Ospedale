@@ -252,7 +252,7 @@ public class AppointmentControl implements AppointmentControlint {
 
         ArrayList<Appointment> sorted = new ArrayList<>(doctor.getAppointments());
         if (pendingOnly) {
-            sorted.removeIf(a -> a.getStatus() != AppointmentStatus.PENDING);
+            sorted.removeIf(a -> a.getStatus() != AppointmentStatus.REQUESTED);
         }
         sorted.sort(Comparator.comparing(Appointment::getDatetime).reversed());
 
