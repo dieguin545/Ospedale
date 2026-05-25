@@ -196,7 +196,10 @@ public class AppointmentControl implements AppointmentControlint {
 
         Prescription prescription = new Prescription(appointment, medicationName, dose,administrationRoute, treatmentDuration, additionalInstructions, frecuency);appointment.addPrescription(prescription);
 
-        return new response(response.SUCCESS, "Medicamento prescrito exitosamente.");
+        return new response(
+    response.SUCCESS,
+    "Medicamento agregado. La cita sigue en estado PENDING hasta ser completada."
+);
     }
 
     @Override

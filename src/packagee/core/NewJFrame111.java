@@ -88,26 +88,39 @@ public class NewJFrame111 extends javax.swing.JFrame {
     }
 
     private void AppointemntsLoadP() {
-        response response = appointmentControl.getDoctorAppointments(doctorId, true);
-        DefaultComboBoxModel<String> modelReschedule = new DefaultComboBoxModel<>();
-        DefaultComboBoxModel<String> modelComplete = new DefaultComboBoxModel<>();
-        DefaultComboBoxModel<String> modelPrescribe = new DefaultComboBoxModel<>();
-        modelReschedule.addElement("Select one");
-        modelComplete.addElement("Select one");
-        modelPrescribe.addElement("Select one");
-        if (response.isSuccess()) {
-            ArrayList<Map<String, Object>> appointments = (ArrayList<Map<String, Object>>) response.getData();
-            for (Map<String, Object> a : appointments) {
-                String id = (String) a.get("id");
+    response response = appointmentControl.getDoctorAppointments(doctorId, false);
+
+    DefaultComboBoxModel<String> modelReschedule = new DefaultComboBoxModel<>();
+    DefaultComboBoxModel<String> modelComplete = new DefaultComboBoxModel<>();
+    DefaultComboBoxModel<String> modelPrescribe = new DefaultComboBoxModel<>();
+
+    modelReschedule.addElement("Select one");
+    modelComplete.addElement("Select one");
+    modelPrescribe.addElement("Select one");
+
+    if (response.isSuccess()) {
+
+        ArrayList<Map<String, Object>> appointments =
+                (ArrayList<Map<String, Object>>) response.getData();
+
+        for (Map<String, Object> a : appointments) {
+
+            String id = (String) a.get("id");
+            String status = String.valueOf(a.get("status"));
+
+            if (status.equals("PENDING")) {
+
                 modelReschedule.addElement(id);
                 modelComplete.addElement(id);
                 modelPrescribe.addElement(id);
             }
         }
-        jComboBox3.setModel(modelReschedule);
-        jComboBox4.setModel(modelComplete);
-        jComboBox7.setModel(modelPrescribe);
     }
+
+    jComboBox3.setModel(modelReschedule);
+    jComboBox4.setModel(modelComplete);
+    jComboBox7.setModel(modelPrescribe);
+}
 
     private void loadPatientCombo() {
         response response = patientControl.getAllPatients();
