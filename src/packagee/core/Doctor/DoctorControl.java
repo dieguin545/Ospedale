@@ -34,12 +34,9 @@ public class DoctorControl implements doctorControlint {
     }
 
     @Override
-    public response registrarDoctor(String firstname, String lastname, String idStr,
-            String username, String password, String confirmPassword,
-            String specialtyStr, String licenceNumber, String assignedOffice) {
+    public response registrarDoctor(String firstname, String lastname, String idStr,String username, String password, String confirmPassword,String specialtyStr, String licenceNumber, String assignedOffice) {
 
-        response validation = validateDoctorFields(idStr, username, password,
-                confirmPassword, licenceNumber, assignedOffice, specialtyStr);
+        response validation = validateDoctorFields(idStr, username, password,confirmPassword, licenceNumber, assignedOffice, specialtyStr);
         if (!validation.isSuccess()) {
             return validation;
         }
@@ -51,18 +48,14 @@ public class DoctorControl implements doctorControlint {
             return new response(response.BAD_REQUEST, "Especialidad inválida.");
         }
 
-        Doctor doctor = service.createDoctor(id, username, firstname, lastname, 
-                                            password, specialty, licenceNumber, 
-                                            assignedOffice);
+        Doctor doctor = service.createDoctor(id, username, firstname, lastname,password, specialty, licenceNumber,assignedOffice);
         service.saveDoctor(doctor);
 
         return new response(response.SUCCESS, "Doctor registrado exitosamente.");
     }
 
     @Override
-    public response updateDoctor(long doctorId, String firstname, String lastname,
-            String username, String password, String confirmPassword,
-            String specialtyStr, String licenceNumber, String assignedOffice) {
+    public response updateDoctor(long doctorId, String firstname, String lastname,String username, String password, String confirmPassword,String specialtyStr, String licenceNumber, String assignedOffice) {
 
         Doctor doctor = getDoctorOrNull(doctorId);
         if (doctor == null) {

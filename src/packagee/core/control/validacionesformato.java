@@ -25,8 +25,7 @@ public class validacionesformato{
         }
         int hour = Integer.parseInt(time.substring(0, 2));
         int minute = Integer.parseInt(time.substring(3));
-        return (hour >= 0 && hour <= 23) && 
-               (minute == 0 || minute == 15 || minute == 30 || minute == 45);
+        return (hour >= 0 && hour <= 23) && (minute == 0 || minute == 15 || minute == 30 || minute == 45);
     }
     
     public static boolean isValidDate(String date) {

@@ -43,10 +43,7 @@ public class AppointmentControl implements AppointmentControlint {
     }
 
     @Override
-    public response requestAppointment(long patientId, boolean byDoctor,
-            String doctorOrSpecialtyStr, String dateStr, String timeStr,
-            String reason, boolean isInPerson) {
-
+    public response requestAppointment(long patientId, boolean byDoctor,String doctorOrSpecialtyStr, String dateStr, String timeStr,String reason, boolean isInPerson) {
         if (!validacionesformato.isValidDate(dateStr)) {
             return new response(response.BAD_REQUEST, "Fecha inválida. Formato: AAAA-MM-DD");
         }
@@ -66,8 +63,7 @@ public class AppointmentControl implements AppointmentControlint {
         if (byDoctor) {
             doctor = findDoctorById(doctorOrSpecialtyStr, dateStr, timeStr);
             if (doctor == null) {
-                return new response(response.CONFLICT, 
-                    "El doctor no tiene disponibilidad en ese horario.");
+                return new response(response.CONFLICT, "El doctor no tiene disponibilidad en ese horario.");
             }
             specialty = doctor.getSpecialty();
         } else {
@@ -76,21 +72,17 @@ public class AppointmentControl implements AppointmentControlint {
                 return new response(response.BAD_REQUEST, "Especialidad inválida.");
             }
 
-            doctor = service.findAvailableDoctorBySpecialty(specialty, 
-                    parseDateTime(dateStr, timeStr));
+            doctor = service.findAvailableDoctorBySpecialty(specialty, parseDateTime(dateStr, timeStr));
             if (doctor == null) {
-                return new response(response.CONFLICT, 
-                    "No hay doctores disponibles para esa especialidad y horario.");
+                return new response(response.CONFLICT, "No hay doctores disponibles para esa especialidad y horario.");
             }
         }
 
         LocalDateTime datetime = parseDateTime(dateStr, timeStr);
-        Appointment appointment = service.createAppointment(patient, doctor, 
-                                                            datetime, reason, isInPerson);
+        Appointment appointment = service.createAppointment(patient, doctor,datetime, reason, isInPerson);
         service.saveAppointment(appointment, patient, doctor);
 
-        return new response(response.SUCCESS, "Cita solicitada exitosamente. ID: " + 
-                           appointment.getId(), formatter.toMap(appointment));
+        return new response(response.SUCCESS, "Cita solicitada exitosamente. ID: " + appointment.getId(), formatter.toMap(appointment));
     }
 
     @Override
@@ -106,13 +98,11 @@ public class AppointmentControl implements AppointmentControlint {
         }
 
         if (appointment.getDoctor().getId() != doctorId) {
-            return new response(response.UNAUTHORIZED, 
-                "Este doctor no es el asignado a esta cita.");
+            return new response(response.UNAUTHORIZED,"Este doctor no es el asignado a esta cita.");
         }
 
         if (appointment.getStatus() != AppointmentStatus.REQUESTED) {
-            return new response(response.BAD_REQUEST, 
-                "Solo se pueden aceptar citas en estado REQUESTED.");
+            return new response(response.BAD_REQUEST,"Solo se pueden aceptar citas en estado REQUESTED.");
         }
 
         appointment.setStatus(AppointmentStatus.PENDING);
@@ -120,9 +110,7 @@ public class AppointmentControl implements AppointmentControlint {
     }
 
     @Override
-    public response completeAppointment(String appointmentId, long doctorId,
-            String diagnosis, String observations, String recommendedTreatment, 
-            String followUp) {
+    public response completeAppointment(String appointmentId, long doctorId,String diagnosis, String observations, String recommendedTreatment, String followUp) {
         
         Appointment appointment = getAppointmentOrNull(appointmentId);
         if (appointment == null) {
@@ -130,13 +118,11 @@ public class AppointmentControl implements AppointmentControlint {
         }
 
         if (appointment.getDoctor().getId() != doctorId) {
-            return new response(response.UNAUTHORIZED, 
-                "Este doctor no es el asignado a esta cita.");
+            return new response(response.UNAUTHORIZED,"Este doctor no es el asignado a esta cita.");
         }
 
         if (appointment.getStatus() != AppointmentStatus.PENDING) {
-            return new response(response.BAD_REQUEST, 
-                "Solo se pueden completar citas en estado PENDING.");
+            return new response(response.BAD_REQUEST, "Solo se pueden completar citas en estado PENDING.");
         }
 
         appointment.setStatus(AppointmentStatus.COMPLETED);
@@ -156,13 +142,11 @@ public class AppointmentControl implements AppointmentControlint {
         }
 
         if (appointment.getPatient().getId() != patientId) {
-            return new response(response.UNAUTHORIZED, 
-                "Esta cita no pertenece a este paciente.");
+            return new response(response.UNAUTHORIZED, "Esta cita no pertenece a este paciente.");
         }
 
         if (appointment.getStatus() == AppointmentStatus.COMPLETED) {
-            return new response(response.BAD_REQUEST, 
-                "No se puede cancelar una cita ya completada.");
+            return new response(response.BAD_REQUEST, "No se puede cancelar una cita ya completada.");
         }
 
         appointment.setStatus(AppointmentStatus.CANCELED);
@@ -170,8 +154,7 @@ public class AppointmentControl implements AppointmentControlint {
     }
 
     @Override
-    public response rescheduleAppointment(String appointmentId, long doctorId,
-            String newTimeStr, String rescheduleReason) {
+    public response rescheduleAppointment(String appointmentId, long doctorId,String newTimeStr, String rescheduleReason) {
         
         Appointment appointment = getAppointmentOrNull(appointmentId);
         if (appointment == null) {
@@ -179,17 +162,14 @@ public class AppointmentControl implements AppointmentControlint {
         }
 
         if (appointment.getDoctor().getId() != doctorId) {
-            return new response(response.UNAUTHORIZED, 
-                "Este doctor no es el asignado a esta cita.");
+            return new response(response.UNAUTHORIZED,"Este doctor no es el asignado a esta cita.");
         }
 
         if (!validacionesformato.isValidTime(newTimeStr)) {
             return new response(response.BAD_REQUEST, "Hora inválida. Formato: hh:mm");
         }
 
-        LocalDateTime newDatetime = LocalDateTime.of(
-            appointment.getDatetime().toLocalDate(),
-            LocalTime.parse(newTimeStr));
+        LocalDateTime newDatetime = LocalDateTime.of(appointment.getDatetime().toLocalDate(),LocalTime.parse(newTimeStr));
         
         appointment.setDatetime(newDatetime);
         String updatedReason = appointment.getReason() + " | Reagendado: " + rescheduleReason;
@@ -199,9 +179,7 @@ public class AppointmentControl implements AppointmentControlint {
     }
 
     @Override
-    public response prescribeMedication(String appointmentId, long doctorId,
-            String medicationName, double dose, String administrationRoute,
-            int treatmentDuration, String additionalInstructions, int frecuency) {
+    public response prescribeMedication(String appointmentId, long doctorId,String medicationName, double dose, String administrationRoute,int treatmentDuration, String additionalInstructions, int frecuency) {
 
         Appointment appointment = getAppointmentOrNull(appointmentId);
         if (appointment == null) {
@@ -209,18 +187,14 @@ public class AppointmentControl implements AppointmentControlint {
         }
 
         if (appointment.getDoctor().getId() != doctorId) {
-            return new response(response.UNAUTHORIZED, 
-                "Este doctor no es el asignado a esta cita.");
+            return new response(response.UNAUTHORIZED, "Este doctor no es el asignado a esta cita.");
         }
 
         if (appointment.getStatus() != AppointmentStatus.PENDING) {
-            return new response(response.BAD_REQUEST, 
-                "Solo se pueden prescribir medicamentos en citas PENDING.");
+            return new response(response.BAD_REQUEST, "Solo se pueden prescribir medicamentos en citas PENDING.");
         }
 
-        Prescription prescription = new Prescription(appointment, medicationName, dose,
-                administrationRoute, treatmentDuration, additionalInstructions, frecuency);
-        appointment.addPrescription(prescription);
+        Prescription prescription = new Prescription(appointment, medicationName, dose,administrationRoute, treatmentDuration, additionalInstructions, frecuency);appointment.addPrescription(prescription);
 
         return new response(response.SUCCESS, "Medicamento prescrito exitosamente.");
     }
@@ -252,7 +226,7 @@ public class AppointmentControl implements AppointmentControlint {
 
         ArrayList<Appointment> sorted = new ArrayList<>(doctor.getAppointments());
         if (pendingOnly) {
-            sorted.removeIf(a -> a.getStatus() != AppointmentStatus.REQUESTED);
+            sorted.removeIf(a -> a.getStatus() != AppointmentStatus.PENDING);
         }
         sorted.sort(Comparator.comparing(Appointment::getDatetime).reversed());
 
@@ -291,8 +265,7 @@ public class AppointmentControl implements AppointmentControlint {
             long docId = Long.parseLong(doctorIdStr);
             Doctor doctor = getDoctorOrNull(docId);
             
-            if (doctor != null && store.doctorAvailable(doctor, 
-                    parseDateTime(dateStr, timeStr))) {
+            if (doctor != null && store.doctorAvailable(doctor, parseDateTime(dateStr, timeStr))) {
                 return doctor;
             }
         } catch (NumberFormatException e) {

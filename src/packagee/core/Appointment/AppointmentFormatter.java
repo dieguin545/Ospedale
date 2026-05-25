@@ -21,10 +21,8 @@ public class AppointmentFormatter {
         Map<String, Object> data = new HashMap<>();
         data.put("id", appointment.getId());
         data.put("datetime", appointment.getDatetime().toString());
-        data.put("doctorName", appointment.getDoctor().getFirstname() + " " + 
-                               appointment.getDoctor().getLastname());
-        data.put("patientName", appointment.getPatient().getFirstname() + " " + 
-                                appointment.getPatient().getLastname());
+        data.put("doctorName", appointment.getDoctor().getFirstname() + " " + appointment.getDoctor().getLastname());
+        data.put("patientName", appointment.getPatient().getFirstname() + " " + appointment.getPatient().getLastname());
         data.put("specialty", appointment.getSpecialty().name());
         data.put("type", appointment.isType() ? "In-person" : "Remote");
         data.put("status", appointment.getStatus().name());
