@@ -27,9 +27,12 @@ public class AppointmentService {
     }
     
 
-    public Appointment createAppointment(Patient patient, Doctor doctor,LocalDateTime datetime, String reason, boolean isInPerson) {
+    public Appointment createAppointment(Patient patient, Doctor doctor, 
+                                         LocalDateTime datetime, String reason, 
+                                         boolean isInPerson) {
         String appointmentId = store.generateAppID(patient.getId());
-        return new Appointment(appointmentId, patient, doctor, doctor.getSpecialty(), datetime, reason, isInPerson);
+        return new Appointment(appointmentId, patient, doctor, 
+                              doctor.getSpecialty(), datetime, reason, isInPerson);
     }
     
 
@@ -60,7 +63,8 @@ public class AppointmentService {
 
     public Specialty parseSpecialty(String specialtyStr) {
         try {
-            return Specialty.valueOf(specialtyStr.replaceAll(" & ", "_").replaceAll(" ", "_").toUpperCase());
+            return Specialty.valueOf(
+                specialtyStr.replaceAll(" & ", "_").replaceAll(" ", "_").toUpperCase());
         } catch (IllegalArgumentException e) {
             return null;
         }
